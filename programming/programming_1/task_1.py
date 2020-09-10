@@ -10,7 +10,7 @@ def gcd(num1, num2):
     return num1 + num2
 
 
-N = int(input("Enter N:"))
+N = int(input("Enter N: "))
 a = int(input("Enter a:"))
 b = int(input("Enter b:"))
 sequence = [random.randint(a, b) for i in range(N)]
