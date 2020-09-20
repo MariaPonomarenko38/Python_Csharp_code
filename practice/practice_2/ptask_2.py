@@ -25,26 +25,41 @@ def rotate_positive_elements(arr):
         arr[ind[i]] = arr1[ind1[i]]
     return arr
 
-
+#-1 0 6 -4 -2 6 -3 -10
 def binary_search(arr, elem):
     arr = [(x, ind) for ind, x in enumerate(arr)]
     arr = sorted(arr)
+    print(arr)
     l = 0
     r = len(arr) - 1
     m = (l + r) // 2
     res = []
+    count = 0
     while r - l > 1:
         m = (l + r) // 2
         if elem > arr[m][0]:
+            print("Comprasion of element and arr[m]:", elem, ">", arr[m][0])
+            print("New value for left border: l =", m)
             l = m
         elif elem < arr[m][0]:
+            print("Comprasion of element and arr[m]:", elem, "<", arr[m][0])
+            print("New value for right border: r =", m)
             r = m
         else:
+            count += 1
+            print("Comprasion of element and arr[m]:", elem, "=", arr[m][0])
             find = arr[m][0]
-            while find == arr[m][0]:
+            print("Index with element K was found! Making a list with all indexes of element K:")
+            while True:
+                if find != elem or m == len(arr):
+                    break
+                find = arr[m][0]
                 res.append(arr[m][1])
                 m += 1
+                count += 1
+            print("Quantity of operations:", count)
             return res
+        count += 1
 
 
 def validation_input(parametr):
@@ -103,4 +118,3 @@ while True:
 # -2 5 6 -3 -4 3 -1
 # -4 3 6 -1 -2 5 -3
 
-# -1 -3 -6 2 -7 -5
