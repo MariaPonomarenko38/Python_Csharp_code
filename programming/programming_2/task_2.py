@@ -34,6 +34,10 @@ def validation_input(parametr):
                 for i in param:
                     if str(abs(i)).isnumeric() is False:
                         raise ValueError
+            elif parametr == "a" or parametr == "b":
+                param = int(input('Input ' + parametr + ': '))
+                if str(abs(param)).isnumeric() is False:
+                    raise ValueError
             else:
                 param = int(input('Input ' + parametr + ': '))
                 if param < 0:
@@ -61,6 +65,8 @@ while True:
         a = validation_input("a")
         b = validation_input("b")
         k = validation_input("k")
+        if a > b:
+            a, b = b, a
         ar = [randint(a, b) for i in range(n)]
         print("Array:", ar)
     else:
