@@ -24,37 +24,46 @@ def factorization(n1):
     return dict1
 
 
-while True:
-    try:
-        a = int(input("Enter a: "))
-        if a < 0:
-            raise Negative
-    except ValueError:
-        print("It's not a number")
-    except Negative:
-        print("a must be positive")
+def validation_input(parametr):
+    while True:
+        try:
+            param = int(input("Enter " + parametr + ": "))
+            if param < 0:
+                raise Negative
+        except ValueError:
+            print("It's not a number")
+        except Negative:
+            print("a must be positive")
+        else:
+            return param
+
+
+def algorithm_finding_n(a):
+    d = factorization(a)
+    max_degree = max(d.values())
+    product = 1
+    for i in d.keys():
+        product *= i  # знаходимо добуток множників (без степенів)
+    if max_degree <= product:  # якщо макс.степінь серед усіх множників <= за добуток то добуток і є відповіддю
+        return product  # наприклад, 12 = 2^2 * 3, 2 <= (2 * 3), отже 6^6 % 12 = 0, або (2^6 * 3^6) % 12 = 0
     else:
-        break
-d = factorization(a)
-max_degree = max(d.values())
-product = 1
-for i in d.keys():
-    product *= i  # знаходимо добуток множників (без степенів)
-if max_degree <= product:  # якщо макс.степінь серед усіх множників <= за добуток то добуток і є відповіддю
-    print(product)  # наприклад, 12 = 2^2 * 3, 2 <= (2 * 3), отже 6^6 % 12 = 0, або (2^6 * 3^6) % 12 = 0
-else:
-    n = product
-    was_found = False
-    while was_found is False:
-        n += product  # додаємо до шуканого числа добуток (бо тоді він буде мати ті самі множники що й А)
-        d1 = factorization(n)
-        if len(d) <= len(d1):
-            was_found = True
-            for i in d.keys():
-                # наприклад: а = 2^18 * 3, підходить n = 12: 2^24 * 3^12, тобто 2: 24 > 18, a 3: 12 > 1
-                # якщо це не виконується - робимо break
-                if d1[i] * n < d[i]:
-                    was_found = False
-                    break
-    print(n)
+        n = product
+        was_found = False
+        while was_found is False:
+            n += product  # додаємо до шуканого числа добуток (бо тоді він буде мати ті самі множники що й А)
+            d1 = factorization(n)
+            if len(d) <= len(d1):
+                was_found = True
+                for i in d.keys():
+                    # наприклад: а = 2^18 * 3, підходить n = 12: 2^24 * 3^12, тобто 2: 24 > 18, a 3: 12 > 1
+                    # якщо це не виконується - робимо break
+                    if d1[i] * n < d[i]:
+                        was_found = False
+                        break
+        return n
+
+
+a = validation_input("a")
+answer = algorithm_finding_n(a)
+print(answer)
 
