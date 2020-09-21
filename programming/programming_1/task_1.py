@@ -1,7 +1,7 @@
 import random
 
 
-class LessThanA(Exception):
+class Negative(Exception):
     pass
 
 
@@ -19,26 +19,38 @@ def gcd(num1, num2):
 
 
 def generate_sequence(a1, b1, n):
+    if a1 > b1:
+        a1, b1 = b1, a1
     s = [random.randint(a1, b1) for i in range(n)]
     return s
 
 
-while True:
-    try:
-        N = int(input("Enter N: "))
-        a = int(input("Enter a: "))
-        b = int(input("Enter b: "))
-        if b < a:
-            raise LessThanA
-    except ValueError:
-        print("It's not a number")
-    except LessThanA:
-        print("b should be bigger than a")
-    else:
-        break
+def finding_gcd_of_pairs(seq, n):
+    for i in range(0, n - 1):
+        for j in range(i + 1, n):
+            if i != j:
+                print("GCD of", sequence[i], "and", sequence[j], "is", gcd(sequence[i], sequence[j]))
+
+
+def validation_input(parametr):
+    while True:
+        try:
+            param = int(input("Enter " + parametr + ": "))
+            if parametr == "N":
+                if param < 0:
+                    raise Negative
+        except ValueError:
+            print("It's not a number")
+        except Negative:
+            print(parametr + " should be positive")
+        else:
+            return param
+
+
+N = validation_input("N")
+a = validation_input("a")
+b = validation_input("b")
 sequence = generate_sequence(a, b, N)
 print("Sequence:", *sequence)
-for i in range(0, N - 1):
-    for j in range(i + 1, N):
-        if i != j:
-            print("GCD of", sequence[i], "and", sequence[j], "is", gcd(sequence[i], sequence[j]))
+finding_gcd_of_pairs(sequence, N)
+
