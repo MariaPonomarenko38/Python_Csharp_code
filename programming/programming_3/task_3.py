@@ -39,3 +39,4 @@ def validation_input():
 n = validation_input()
 arr = making_matrix(n)
 print_matrix(n, arr)
+
