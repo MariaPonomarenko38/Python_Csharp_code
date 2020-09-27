@@ -26,6 +26,15 @@ def rotate_positive_elements(arr):
     return arr
 
 
+def calculating_operations(k, array_element, middle, sign, border, if_number, num_of_operations):
+    print('Comprasion of element and arr[m]: {0} {1} {2}'.format(k, sign, array_element))
+    if if_number == 3:
+        print("Index with element K was found! Making a list with all indexes of element K:")
+    else:
+        print('New value for {0} border: {1} = {2}'.format(border, border[0:1], middle))
+    return num_of_operations
+
+
 #-1 0 6 -4 -2 6 -3 -10
 def binary_search(arr, elem):
     arr = [(x, ind) for ind, x in enumerate(arr)]
@@ -38,20 +47,14 @@ def binary_search(arr, elem):
     while r - l > 1:
         m = (l + r) // 2
         if elem > arr[m][0]:
-            print("Comprasion of element and arr[m]:", elem, ">", arr[m][0])
-            print("New value for left border: l =", m)
+            count += calculating_operations(elem, arr[m][0], m, '>', 'left', 1, 5)
             l = m
-            count += 4
         elif elem < arr[m][0]:
-            print("Comprasion of element and arr[m]:", elem, "<", arr[m][0])
-            print("New value for right border: r =", m)
+            count += calculating_operations(elem, arr[m][0], m, '<', 'right', 2, 6)
             r = m
-            count += 5
         else:
-            count += 4  # change of m, comprasion
             count1 = 0
-            print("Comprasion of element and arr[m]:", elem, "=", arr[m][0])
-            print("Index with element K was found! Making a list with all indexes of element K:")
+            count += calculating_operations(elem, arr[m][0], m, '=', 'equal', 3, 4)
             while True:
                 if arr[m][0] != elem or m == len(arr):
                     break
@@ -60,6 +63,11 @@ def binary_search(arr, elem):
                 count1 += 3
             print("Quantity of operations for binary search:", count + 3)
             print("Quantity of operations for finding all indexes of element K and forming result array:", count1 + 2)
+            return res
+        if r - l <= 1:
+            print("Quantity of operations for binary search:", count + 4)
+            print("Element K wasn't found!")
+            res.append("Empty!")
             return res
 
 
@@ -113,7 +121,7 @@ while True:
     print("Result:", ar, end='\n\n')
     element = validation_input("K")
     all_indexes = binary_search(ar, element)
-    print("All positions of K in array: ", all_indexes, end='\n\n')
+    print("All positions of K in array: ", *all_indexes, end='\n\n')
 
 
 # -2 5 6 -3 -4 3 -1
