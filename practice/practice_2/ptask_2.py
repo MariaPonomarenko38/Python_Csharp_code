@@ -5,6 +5,14 @@ class Negative(Exception):
     pass
 
 
+def sort_algorithm(arr):
+    for i in range(len(arr) - 1):
+        for j in range(len(arr) - i - 1):
+            if arr[j][0] > arr[j + 1][0]:
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+    return arr
+
+
 def negative_cycle(arr, k):
     for i in range(k):
         ind = [ind for ind, element in enumerate(arr) if element < 0]
@@ -38,7 +46,7 @@ def calculating_operations(k, array_element, middle, sign, border, if_number, nu
 #-1 0 6 -4 -2 6 -3 -10
 def binary_search(arr, elem):
     arr = [(x, ind) for ind, x in enumerate(arr)]
-    arr = sorted(arr)
+    arr = sort_algorithm(arr)
     print(arr)
     l = 0
     r = len(arr) - 1
