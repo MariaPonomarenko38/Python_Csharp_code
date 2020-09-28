@@ -26,10 +26,17 @@ def generate_sequence(a1, b1, n):
 
 
 def finding_gcd_of_pairs(seq, n):
+    result_arr = []
     for i in range(0, n - 1):
         for j in range(i + 1, n):
             if i != j:
-                print("GCD of", sequence[i], "and", sequence[j], "is", gcd(sequence[i], sequence[j]))
+                result_arr.append([seq[i], seq[j], gcd(seq[i], seq[j])])
+    return result_arr
+
+
+def print_pairs_and_gcd(seq):
+    for element in seq:
+        print("GCD of", element[0], "and", element[1], "is", element[2])
 
 
 def validation_input(parametr):
@@ -52,5 +59,6 @@ a = validation_input("a")
 b = validation_input("b")
 sequence = generate_sequence(a, b, N)
 print("Sequence:", *sequence)
-finding_gcd_of_pairs(sequence, N)
+result = finding_gcd_of_pairs(sequence, N)
+print_pairs_and_gcd(result)
 
