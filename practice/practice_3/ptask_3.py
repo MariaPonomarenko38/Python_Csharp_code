@@ -35,8 +35,9 @@ class LinkedList:
         if not self.head:
             self.head = node
             return
-        for current_node in self:
-            pass
+        current_node = self.head
+        while current_node.next is not None:
+            current_node = current_node.next
         current_node.next = node
 
     def get_negative_node(self, param):
@@ -106,8 +107,8 @@ class LinkedList:
 def validation_input(parametr):
     while True:
         try:
-            if parametr == "array":
-                param = [int(i) for i in input("Input array: ").split()]
+            if parametr == "linked_list":
+                param = [int(i) for i in input("Input linked list: ").split()]
                 for i in param:
                     if str(abs(i)).isnumeric() is False:
                         raise ValueError
@@ -134,7 +135,7 @@ while True:
     3. Exit''')
     choice = validation_input("choice")
     if choice == 1:
-        ar = validation_input("array")
+        linked_list = LinkedList(validation_input("linked_list"))
         k = validation_input("k")
     elif choice == 2:
         n = validation_input("n")
@@ -144,11 +145,10 @@ while True:
         k = validation_input("k")
         if a > b:
             a, b = b, a
-        ar = [randint(a, b) for i in range(n)]
-        print("Array:", ar)
+        linked_list = LinkedList([randint(a, b) for i in range(n)])
+        print("Linked list:", linked_list)
     else:
         break
-    linked_list = LinkedList(ar)
     linked_list.negative_k_cycle(k)
     linked_list.reverse_positive()
     print("Result:", linked_list)
