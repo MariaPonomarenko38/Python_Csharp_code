@@ -113,7 +113,7 @@ class LinkedList:
 def validation_input(parametr):
     while True:
         try:
-            if parametr == "Linked_list":
+            if parametr == "linked_list":
                 param = LinkedList()
                 print('Type STOP to exit')
                 while True:
@@ -150,7 +150,7 @@ while True:
     3. Exit''')
     choice = validation_input("choice")
     if choice == 1:
-        linked_list = validation_input("Linked_list")
+        linked_list = validation_input("linked_list")
         k = validation_input("k")
     elif choice == 2:
         n = validation_input("n")
