@@ -5,6 +5,10 @@ class Negative(Exception):
     pass
 
 
+class WrongListElement(Exception):
+    pass
+
+
 class Node:
     def __init__(self, data):
         self.data = data
@@ -53,13 +57,13 @@ class LinkedList:
             next1 = current.next
         if current.data < 0:
             answer = current
-        return answer
+        return answer.data if answer != 0 else answer
 
     def negative_k_cycle(self, k):
         for i in range(k):
             k1 = 0
             t = 0
-            last_node_data = self.get_negative_node("last").data
+            last_node_data = self.get_negative_node("last")
             if last_node_data == 0:
                 return self
             for node in self:
@@ -71,6 +75,8 @@ class LinkedList:
                     node.data = t_data
                     t_data = s_data
             first_node = self.get_negative_node("first")
+            if first_node == 0:
+                return
             first_node.data = last_node_data
         return self
 
@@ -108,10 +114,16 @@ def validation_input(parametr):
     while True:
         try:
             if parametr == "linked_list":
-                param = [int(i) for i in input("Input linked list: ").split()]
-                for i in param:
-                    if str(abs(i)).isnumeric() is False:
-                        raise ValueError
+                param = LinkedList()
+                print('Type STOP to exit')
+                while True:
+                    n = input('Element of linked list: ')
+                    if n == 'STOP':
+                        return param
+                    elif str(abs(int(n))).isnumeric() is False:
+                        raise WrongListElement
+                    else:
+                        param.push_back(int(n))
             elif parametr == "a" or parametr == "b":
                 param = int(input('Input ' + parametr + ': '))
                 if str(abs(param)).isnumeric() is False:
@@ -120,6 +132,9 @@ def validation_input(parametr):
                 param = int(input('Input ' + parametr + ': '))
                 if param < 0:
                     raise Negative
+        except WrongListElement:
+            print('Element of list should be number, try again')
+            return
         except Negative:
             print(parametr + " should be positive")
         except ValueError:
@@ -135,7 +150,7 @@ while True:
     3. Exit''')
     choice = validation_input("choice")
     if choice == 1:
-        linked_list = LinkedList(validation_input("linked_list"))
+        linked_list = validation_input("linked_list")
         k = validation_input("k")
     elif choice == 2:
         n = validation_input("n")
@@ -149,6 +164,7 @@ while True:
         print("Linked list:", linked_list)
     else:
         break
+    print(linked_list)
     linked_list.negative_k_cycle(k)
     linked_list.reverse_positive()
     print("Result:", linked_list)
