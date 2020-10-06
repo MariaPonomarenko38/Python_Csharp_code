@@ -50,7 +50,10 @@ class OnlineMeeting:
         return True
 
     def search(self, value):
-        return value in [self.__id, self.date, self.start_time, self.end_time, self.meeting_url, self.owner.get_name(), self.owner.get_surname(), self.participant.get_name(), self.participant.get_surname()]
+        li = [str(self.__id), self.date, self.start_time, self.end_time, self.meeting_url, self.owner.get_name(), self.owner.get_surname(), self.participant.get_name(), self.participant.get_surname()]
+        for i in li:
+            if value in i[0:len(i)]:
+                return value
 
     def get_field(self, param):
         if param in {'date', 'start_time', 'end_time', 'meeting_url', 'owner', 'participant'}:

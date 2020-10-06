@@ -1,4 +1,5 @@
 from datetime import datetime, date, time
+import os
 
 
 class WrongLen(Exception):
@@ -95,7 +96,7 @@ class Validate:
             raise WrongTime
 
     def validate_url(self):
-        if self.ls[4].find('http') != 0:
+        if self.ls[4].find('http://') != 0:
             raise WrongUrl
 
 
@@ -122,3 +123,22 @@ def validate_input():
         else:
             return new_meeting
 
+
+def validate_file_input():
+    while True:
+        file = input('Input name of your file: ')
+        try:
+            if not os.path.isfile(file):
+                raise FileExistsError
+        except FileExistsError:
+            print('File not exists, try again')
+        else:
+            return file
+
+
+def file_exist(file):
+    try:
+        if not os.path.isfile(file):
+            raise FileExistsError
+    except FileExistsError:
+        print('File not exists')

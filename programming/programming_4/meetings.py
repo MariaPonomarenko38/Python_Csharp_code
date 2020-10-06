@@ -1,6 +1,7 @@
 from Ponomarenko_pmi25.programming.programming_4.online_meeting import OnlineMeeting
 from Ponomarenko_pmi25.programming.programming_4.validation import Validate
 from datetime import datetime as dt
+import os
 
 
 class Meetings:
@@ -10,12 +11,6 @@ class Meetings:
 
     def add_to_list(self, meeting: OnlineMeeting):
         self.meetings.append(meeting)
-
-    def id_exists(self, id):
-        for i in self.meetings:
-            if i.get_field('id') == id:
-                return True
-        return False
 
     def remove_from_list(self, id):
         for i in range(len(self.meetings)):
@@ -98,21 +93,19 @@ class Meetings:
                     self.meetings[i] = OnlineMeeting(*arg)
                     return
 
-
-def fill_list_from_file(file, param):
-    f = open('input.txt', 'r')
-    input_lines = f.readlines()
-    list1 = Meetings()
-    for line in input_lines:
-        v = Validate(line.split())
-        if v.validate_file_while_filling() is True:
-            arg = line.split()
-            arg[0] = int(arg[0])
-            list1.add_to_list(OnlineMeeting(*arg))
-        else:
-            print('You should change line with id ' + line.split()[0] + ' in your file')
-            return
-    print('Well done!')
-    return list1
+    def fill_list_from_file(self, file):
+        f = open(file, 'r')
+        input_lines = f.readlines()
+        for line in input_lines:
+            v = Validate(line.split())
+            if v.validate_file_while_filling() is True:
+                arg = line.split()
+                arg[0] = int(arg[0])
+                self.add_to_list(OnlineMeeting(*arg))
+            else:
+                print('Meeting with id ' + line.split()[0] + ' is not correct')
+                continue
+        print('Well done!')
+        return self
 
 
