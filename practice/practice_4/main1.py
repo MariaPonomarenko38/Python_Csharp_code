@@ -19,9 +19,9 @@ def creating_sequence(a1, b1, n, param):
         for i in range(n):
             s.append(next(f))
     elif param == 2:
-        gen_iter = generator_random_number(n, a1, b1)
+        f = generator_random_number(n, a1, b1)
         for i in range(n):
-            s.append(next(gen_iter))
+            s.append(next(f))
     return s
 
 
