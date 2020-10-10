@@ -11,15 +11,13 @@ while True:
     2. Sort by parametr
     3. Delete meeting by ID
     4. Add meeting
-    5. Edit meeting by ID (don't change ID!)
+    5. Edit meeting by ID
     6. See all meetings
     7. Exit''' + '\n')
     if number_op == '0':
         ls.fill_list_from_file(file_name)
     elif number_op == '1':
         val = input('Input value for meeting: ')
-        if val.isdigit():
-            val = int(val)
         ls.search_in_list(val)
     elif number_op == '2':
         print('''Parametrs to sort: id, date, start_time, end_time, owner, participant''')
@@ -36,11 +34,11 @@ while True:
         else:
             print("Wrong id")
     elif number_op == '4':
-        new_meeting = validate_input()
+        new_meeting = validate_input('add')
         ls.add(file_name, new_meeting)
     elif number_op == '5':
         id = input('Input id: ')
-        new_meeting = validate_input()
+        new_meeting = validate_input('edit')
         ls.edit(file_name, id, new_meeting)
     elif number_op == '6':
         if type(ls) == 'NoneType':

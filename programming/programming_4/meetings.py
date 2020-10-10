@@ -1,7 +1,6 @@
 from Ponomarenko_pmi25.programming.programming_4.online_meeting import OnlineMeeting
 from Ponomarenko_pmi25.programming.programming_4.validation import Validate
 from datetime import datetime as dt
-import os
 
 
 class Meetings:
@@ -14,7 +13,6 @@ class Meetings:
 
     def remove_from_list(self, id):
         for i in range(len(self.meetings)):
-            print(self.meetings[i].get_field('id'), int(id))
             if self.meetings[i].get_field('id') == int(id):
                 del self.meetings[i]
                 return
@@ -50,6 +48,9 @@ class Meetings:
                         self.meetings[j], self.meetings[j + 1] = self.meetings[j + 1], self.meetings[j]
 
     def add(self, file, val):
+        if len(self.meetings) == 0:
+            print('Your list is empty! Fill it first from file!')
+            return
         with open(file, 'a', encoding='utf-8') as f:
             f.write("\n" + val)
         arg = val.split()
@@ -61,31 +62,41 @@ class Meetings:
         input_lines = f.readlines()
         f.truncate(0)
         f.close()
-        count = 0
         with open(file, 'w', encoding='utf-8') as f:
+            b = False
             for line in input_lines:
-                if int(line.split()[0]) != int(id) or count > 0:
-                    f.write(line)
-                else:
-                    count += 1
+                if int(line.split()[0]) != int(id):
+                    if b is False:
+                        b = True
+                        f.write(line.strip('\n'))
+                    else:
+                        f.write('\n' + line.strip('\n'))
+        v = Validate([])
+        v.remove_id(id)
         self.remove_from_list(id)
 
     def edit(self, file, id, val):
         arg = val.split()
+        if arg[0] != id:
+            arg[0] = id
+            val = " ".join(arg)
+            print('You typed another id, it was ignored')
         arg[0] = int(arg[0])
         f = open(file, "r+")
         input_lines = f.readlines()
         f.truncate(0)
         f.close()
-        count = 0
         with open(file, 'w', encoding='utf-8') as f:
+            b = False
             for line in input_lines:
-                if int(line.split()[0]) != int(id) or count > 0:
-                    f.write(line)
-                elif count == 0:
-                    count += 1
-                    f.write(val + "\n")
-
+                if int(line.split()[0]) != int(id):
+                    if b is False:
+                        b = True
+                        f.write(line.strip('\n'))
+                    else:
+                        f.write('\n' + line.strip('\n'))
+                else:
+                    f.write("\n" + val)
         f.close()
         if len(self.meetings) > 1:
             for i in range(len(self.meetings)):
