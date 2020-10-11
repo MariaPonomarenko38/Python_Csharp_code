@@ -1,6 +1,6 @@
 from datetime import datetime, date, time
 import os
-
+import re
 
 class WrongLen(Exception):
     pass
@@ -120,7 +120,8 @@ class Validate:
             raise WrongTime
 
     def validate_url(self):
-        if self.ls[4].find('http://') != 0:
+        result = re.match(r'^(?:http|ftp)s?:\/(?:\/[\w.?=]+){2,}$', self.ls[4])
+        if result is None:
             raise WrongUrl
 
 
