@@ -128,7 +128,7 @@ class Validate:
 def validate_input(s):
     while True:
         try:
-            new_meeting = input('Input info for new meeting or -1: ')
+            new_meeting = input('Input info for new meeting: ')
             v = Validate(new_meeting.split())
             v.validate_all1(s)
         except WrongLen:
