@@ -1,5 +1,5 @@
 from Ponomarenko_pmi25.programming.programming_4.online_meeting import OnlineMeeting
-from Ponomarenko_pmi25.programming.programming_4.validation import Validate
+from Ponomarenko_pmi25.programming.programming_4.validation import Validate, validate_input
 from datetime import datetime as dt
 
 
@@ -32,20 +32,28 @@ class Meetings:
             if i.search(value):
                 print(i)
 
+    def compare(self, param, x, y):
+        if param not in ['participant', 'owner', 'date'] and x > y:
+            return True
+        elif param in ['participant', 'owner']:
+            if x.get_name().lower() > y.get_name().lower():
+                return True
+        elif param == 'date':
+            a = dt.strptime(x, "%d.%m.%Y")
+            b = dt.strptime(y, "%d.%m.%Y")
+            if a > b:
+                return True
+        return False
+
     def sort(self, param):
-        for i in range(len(self.meetings)):
-            for j in range(len(self.meetings) - i - 1):
-                x = self.meetings[j].get_field(param)
-                y = self.meetings[j + 1].get_field(param)
-                if param not in ['participant', 'owner', 'date'] and x > y:
-                    self.meetings[j], self.meetings[j + 1] = self.meetings[j + 1], self.meetings[j]
-                elif param in ['participant', 'owner'] and x.get_name().lower() > y.get_name().lower():
-                    self.meetings[j], self.meetings[j + 1] = self.meetings[j + 1], self.meetings[j]
-                elif param == 'date':
-                    a = dt.strptime(x, "%d.%m.%Y")
-                    b = dt.strptime(y, "%d.%m.%Y")
-                    if a > b:
-                        self.meetings[j], self.meetings[j + 1] = self.meetings[j + 1], self.meetings[j]
+        for i in range(1, len(self.meetings)):
+            k = self.meetings[i]
+            j = i - 1
+            x = self.meetings[j].get_field(param)
+            while j >= 0 and self.compare(param, x, k.get_field(param)):
+                self.meetings[j + 1] = self.meetings[j]
+                j -= 1
+                self.meetings[j + 1] = k
 
     def add(self, file, val):
         if len(self.meetings) == 0:
@@ -108,8 +116,7 @@ class Meetings:
         f = open(file, 'r')
         input_lines = f.readlines()
         for line in input_lines:
-            v = Validate(line.split())
-            if v.validate_file_while_filling() is True:
+            if validate_input('add', True, line) is True:
                 arg = line.split()
                 arg[0] = int(arg[0])
                 self.add_to_list(OnlineMeeting(*arg))
