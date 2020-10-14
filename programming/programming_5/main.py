@@ -1,5 +1,5 @@
-from proga_3.meetings import Meetings
-from proga_3.validation1 import validate_file_input, Validate
+from Ponomarenko_pmi25.programming.programming_5.meetings import Meetings
+from Ponomarenko_pmi25.programming.programming_5.validation1 import validate_file_input, Validate
 
 
 ls = Meetings()

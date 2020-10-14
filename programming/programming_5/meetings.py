@@ -1,5 +1,5 @@
-from proga_3.online_meeting import OnlineMeeting
-from proga_3.validation1 import Validate
+from Ponomarenko_pmi25.programming.programming_5.online_meeting import OnlineMeeting
+from Ponomarenko_pmi25.programming.programming_5.validation1 import Validate
 from datetime import datetime as dt
 
 
