@@ -18,9 +18,9 @@ while True:
         val = input('Input value for meeting: ')
         ls.search_in_list(val)
     elif number_op == '2':
-        print('''Parametrs to sort: id, date, start_time, end_time, owner, participant''')
+        print('''Parametrs to sort: id, date, start_time, end_time, meeting_url, owner, participant''')
         param = input('Input parametr for sorting: ')
-        if param in ['id', 'date', 'start_time', 'end_time', 'owner', 'participant']:
+        if param in ['id', 'date', 'start_time', 'end_time', 'owner', 'meeting_url', 'participant']:
             ls.sort(param)
             ls.print_list()
         else:

@@ -38,6 +38,8 @@ class Meetings:
         elif param in ['participant', 'owner']:
             if x.get_name().lower() > y.get_name().lower():
                 return True
+            elif x.get_name().lower() == y.get_name().lower() and x.get_surname().lower() > y.get_surname().lower():
+                return True
         elif param == 'date':
             a = dt.strptime(x, "%d.%m.%Y")
             b = dt.strptime(y, "%d.%m.%Y")
@@ -46,14 +48,12 @@ class Meetings:
         return False
 
     def sort(self, param):
-        for i in range(1, len(self.meetings)):
-            k = self.meetings[i]
-            j = i - 1
-            x = self.meetings[j].get_field(param)
-            while j >= 0 and self.compare(param, x, k.get_field(param)):
-                self.meetings[j + 1] = self.meetings[j]
-                j -= 1
-                self.meetings[j + 1] = k
+        for i in range(len(self.meetings)):
+            for j in range(len(self.meetings) - i - 1):
+                a = self.meetings[j].get_field(param)
+                b = self.meetings[j + 1].get_field(param)
+                if self.compare(param, a, b):
+                    self.meetings[j], self.meetings[j + 1] = self.meetings[j + 1], self.meetings[j]
 
     def add(self, file, val):
         if len(self.meetings) == 0:
@@ -63,7 +63,7 @@ class Meetings:
             f.write("\n" + val)
         arg = val.split()
         arg[0] = int(arg[0])
-        self.add_to_list(OnlineMeeting(*arg))
+        self.add_to_list(OnlineMeeting(arg))
 
     def remove(self, file, id):
         f = open(file, "r+")
@@ -109,7 +109,7 @@ class Meetings:
         if len(self.meetings) > 1:
             for i in range(len(self.meetings)):
                 if self.meetings[i].get_field('id') == int(id):
-                    self.meetings[i] = OnlineMeeting(*arg)
+                    self.meetings[i] = OnlineMeeting(arg)
                     return
 
     def fill_list_from_file(self, file):
@@ -119,7 +119,7 @@ class Meetings:
             if validate_input('add', True, line) is True:
                 arg = line.split()
                 arg[0] = int(arg[0])
-                self.add_to_list(OnlineMeeting(*arg))
+                self.add_to_list(OnlineMeeting(arg))
             else:
                 print('Meeting with id ' + line.split()[0] + ' is not correct')
                 continue
