@@ -1,5 +1,6 @@
 fields = ['id', 'date', 'start_time', 'end_time', 'meeting_url', 'owner', 'participant']
 
+
 class FullName:
 
     def __init__(self, name, surname):
@@ -25,14 +26,13 @@ class FullName:
 
 
 class OnlineMeeting:
-    def __init__(self, id1, date, start_time, end_time, meeting_url, owner_name, owner_surname, participant_name, participant_surname):
-        self.id = id1
-        self.date = date
-        self.start_time = start_time
-        self.end_time = end_time
-        self.meeting_url = meeting_url
-        self.owner = FullName(owner_name, owner_surname)
-        self.participant = FullName(participant_name, participant_surname)
+
+    def __init__(self, args):
+        for i, elem in enumerate(args):
+            if i < 5:
+                setattr(self, fields[i], elem)
+        self.owner = FullName(args[5], args[6])
+        self.participant = FullName(args[7], args[8])
 
     def __repr__(self):
         d1 = self.__dict__
@@ -61,9 +61,10 @@ class OnlineMeeting:
             return getattr(self, param)
 
     def change_field(self, param, value):
-        if param in {'date', 'start_time', 'end_time', 'url'}:
+        if param in {'date', 'start_time', 'end_time', 'meeting_url'}:
             setattr(self, param, value)
         elif param == 'owner':
             self.owner.set_value(*value.split())
         elif param == 'participant':
             self.participant.set_value(*value.split())
+
