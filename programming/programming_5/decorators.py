@@ -40,7 +40,7 @@ def check_len(func):
             if len(self.ls) < 9:
                 raise WrongLen
         except WrongLen:
-            print('wrong len')
+            print('wrong  len')
             return
         else:
             return func(self)

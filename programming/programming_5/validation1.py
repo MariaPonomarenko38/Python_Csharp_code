@@ -30,7 +30,7 @@ class Validate:
     def __call__(self):
         if self.action != 'edit' and unique_ind.count(self.ls[0]) > 1:
             unique_ind.remove(self.ls[0])
-            print('id is not unique')
+            print('id is not  unique')
             return None
         return self.ls
 
