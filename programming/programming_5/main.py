@@ -36,6 +36,8 @@ while True:
         v = Validate(new_meeting.split(), 'add')
         if v() is not None:
             ls.add(file_name, new_meeting)
+        else:
+            v.remove_id(new_meeting.split()[0])
     elif number_op == '5':
         id = input('Input id: ')
         new_meeting = input('Input info for new meeting: ')
