@@ -41,6 +41,15 @@ class OnlineMeeting:
             s += i + ': ' + str(d1[i]) + '\n'
         return s
 
+    def str_format(self):
+        d1 = self.__dict__
+        s = ''
+        for i in d1:
+            s += str(d1[i]) + ' '
+        s = s.rstrip(' ')
+        return s
+
+
     def compare(self, other):
         d1 = self.__dict__
         for param in d1.keys():
@@ -67,4 +76,3 @@ class OnlineMeeting:
             self.owner.set_value(*value.split())
         elif param == 'participant':
             self.participant.set_value(*value.split())
-
