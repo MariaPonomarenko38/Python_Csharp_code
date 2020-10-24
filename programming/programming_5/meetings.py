@@ -55,66 +55,41 @@ class Meetings:
                 if self.compare(param, a, b):
                     self.meetings[j], self.meetings[j + 1] = self.meetings[j + 1], self.meetings[j]
 
+    def rewrite_file(self, file):
+        with open(file, 'w') as f:
+            for i, elem in enumerate(self.meetings):
+                if i != len(self.meetings) - 1:
+                    f.write(elem.str_format() + '\n')
+                else:
+                    f.write(elem.str_format())
+        f.close()
+
     def add(self, file, val):
         if len(self.meetings) == 0:
             print('Your list is empty! Fill it first from file!')
             return
-        if val is None:
-            return
-        with open(file, 'a', encoding='utf-8') as f:
-            f.write("\n" + val)
         arg = val.split()
         arg[0] = int(arg[0])
         self.add_to_list(OnlineMeeting(arg))
+        self.rewrite_file(file)
 
     def remove(self, file, id):
-        f = open(file, "r+")
-        input_lines = f.readlines()
-        f.truncate(0)
-        f.close()
-        with open(file, 'w', encoding='utf-8') as f:
-            b = False
-            for line in input_lines:
-                if int(line.split()[0]) != int(id):
-                    if b is False:
-                        b = True
-                        f.write(line.strip('\n'))
-                    else:
-                        f.write('\n' + line.strip('\n'))
         v = Validate([], 'remove')
         v.remove_id(id)
         self.remove_from_list(id)
+        self.rewrite_file(file)
 
     def edit(self, file, id, val):
-        if val is None:
-            return
         arg = val.split()
         if arg[0] != id:
             arg[0] = id
-            val = " ".join(arg)
             print('You typed another id, it was ignored')
         arg[0] = int(arg[0])
-        f = open(file, "r+")
-        input_lines = f.readlines()
-        f.truncate(0)
-        f.close()
-        with open(file, 'w', encoding='utf-8') as f:
-            b = False
-            for line in input_lines:
-                if int(line.split()[0]) != int(id):
-                    if b is False:
-                        b = True
-                        f.write(line.strip('\n'))
-                    else:
-                        f.write('\n' + line.strip('\n'))
-                else:
-                    f.write("\n" + val)
-        f.close()
         if len(self.meetings) > 1:
             for i in range(len(self.meetings)):
                 if self.meetings[i].get_field('id') == int(id):
                     self.meetings[i] = OnlineMeeting(arg)
-                    return
+        self.rewrite_file(file)
 
     def fill_list_from_file(self, file):
         f = open(file, 'r')
@@ -130,5 +105,3 @@ class Meetings:
                 continue
         print('Well done!')
         return self
-
-
