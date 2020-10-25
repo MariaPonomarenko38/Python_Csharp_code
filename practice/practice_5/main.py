@@ -3,7 +3,7 @@ from Ponomarenko_pmi25.practice.practice_5.context import Context
 from Ponomarenko_pmi25.practice.practice_5.validation import *
 
 linked_list = LinkedList()
-context = Context(0)
+context = Context(1)
 while True:
     print('''Choose option:
     1. Strategy 1 for inserting in list
