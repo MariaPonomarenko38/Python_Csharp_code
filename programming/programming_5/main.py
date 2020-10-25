@@ -1,5 +1,5 @@
 from Ponomarenko_pmi25.programming.programming_5.meetings import Meetings
-from Ponomarenko_pmi25.programming.programming_5.validation1 import validate_file_input, Validate
+from Ponomarenko_pmi25.programming.programming_5.validation1 import validate_file_input
 
 
 ls = Meetings()
@@ -22,7 +22,6 @@ while True:
         param = input('Input parametr for sorting: ')
         if param in ['id', 'date', 'start_time', 'end_time', 'meeting_url', 'owner', 'participant']:
             ls.sort(param)
-            ls.print_list()
         else:
             print('Wrong parametr')
     elif number_op == '3':
@@ -33,17 +32,11 @@ while True:
             print("Wrong id")
     elif number_op == '4':
         new_meeting = input('Input info for new meeting: ')
-        v = Validate(new_meeting.split(), 'add')
-        if v() is not None:
-            ls.add(file_name, new_meeting)
-        else:
-            v.remove_id(new_meeting.split()[0])
+        ls.add(new_meeting, file_name)
     elif number_op == '5':
         id = input('Input id: ')
         new_meeting = input('Input info for new meeting: ')
-        v = Validate(new_meeting.split(), 'edit')
-        if v() is not None:
-            ls.edit(file_name, id, new_meeting)
+        ls.edit(new_meeting, file_name, id)
     elif number_op == '6':
         if type(ls) == 'NoneType':
             print('Your list_meetings is empty!')

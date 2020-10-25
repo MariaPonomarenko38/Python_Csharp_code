@@ -1,9 +1,11 @@
 from Ponomarenko_pmi25.programming.programming_5.online_meeting import OnlineMeeting
-from Ponomarenko_pmi25.programming.programming_5.validation1 import Validate
+from Ponomarenko_pmi25.programming.programming_5.decorators import *
 from datetime import datetime as dt
 
 
 class Meetings:
+
+    unique_ind = []
 
     def __init__(self):
         self.meetings = []
@@ -64,22 +66,27 @@ class Meetings:
                     f.write(elem.str_format())
         f.close()
 
-    def add(self, file, val):
-        if len(self.meetings) == 0:
-            print('Your list is empty! Fill it first from file!')
-            return
+    @validate_all
+    def add(self, val, file, param=None):
         arg = val.split()
         arg[0] = int(arg[0])
-        self.add_to_list(OnlineMeeting(arg))
-        self.rewrite_file(file)
+        if self.unique_ind.count(arg[0]) == 0:
+            self.unique_ind.append(arg[0])
+            self.add_to_list(OnlineMeeting(arg))
+            if param is None:
+                self.rewrite_file(file)
+        else:
+            print('Id is not unique')
 
     def remove(self, file, id):
-        v = Validate([], 'remove')
-        v.remove_id(id)
-        self.remove_from_list(id)
-        self.rewrite_file(file)
+        if self.unique_ind.count(id) == 1:
+            self.remove_from_list(id)
+            self.rewrite_file(file)
+        else:
+            print("Meeting with this id doesn't exist")
 
-    def edit(self, file, id, val):
+    @validate_all
+    def edit(self, val, file, id):
         arg = val.split()
         if arg[0] != id:
             arg[0] = id
@@ -95,13 +102,6 @@ class Meetings:
         f = open(file, 'r')
         input_lines = f.readlines()
         for line in input_lines:
-            arg = line.split()
-            v = Validate(arg, 'add')
-            if v() is not None:
-                arg[0] = int(arg[0])
-                self.add_to_list(OnlineMeeting(arg))
-            else:
-                print('Meeting with id ' + line.split()[0] + ' is not correct')
-                continue
+            self.add(line, file, 'file')
         print('Well done!')
         return self
