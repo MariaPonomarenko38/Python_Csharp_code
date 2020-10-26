@@ -1,0 +1,2 @@
+comfort:2
+minibus:1
