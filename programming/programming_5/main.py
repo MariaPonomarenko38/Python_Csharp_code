@@ -45,7 +45,7 @@ while True:
     elif number_op == '7':
         break
     else:
-        print('Wrong number of choice')
+        print('Wrong number of  choice')
 
 
 

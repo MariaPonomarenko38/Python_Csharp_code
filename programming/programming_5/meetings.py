@@ -19,8 +19,8 @@ class Meetings:
                 del self.meetings[i]
                 return
 
-    def change(self, ind, param, value):
-        self.meetings[ind - 1].change_field(param, value)
+    def change(self, ind, meeting: OnlineMeeting):
+        self.meetings[ind] = meeting
 
     def __getitem__(self, item):
         return self.meetings[item]
@@ -66,37 +66,38 @@ class Meetings:
                     f.write(elem.str_format())
         f.close()
 
-    @validate_all
     def add(self, val, file, param=None):
         arg = val.split()
-        arg[0] = int(arg[0])
-        if self.unique_ind.count(arg[0]) == 0:
-            self.unique_ind.append(arg[0])
-            self.add_to_list(OnlineMeeting(arg))
-            if param is None:
-                self.rewrite_file(file)
-        else:
-            print('Id is not unique')
+        obj = OnlineMeeting(arg)
+        if obj.exist():
+            if self.unique_ind.count(arg[0]) == 0:
+                self.add_to_list(obj)
+                self.unique_ind.append(arg[0])
+                if param is None:
+                    self.rewrite_file(file)
+            else:
+                print('Id is not unique')
 
     def remove(self, file, id):
         if self.unique_ind.count(id) == 1:
+            self.unique_ind.remove(id)
             self.remove_from_list(id)
             self.rewrite_file(file)
         else:
             print("Meeting with this id doesn't exist")
 
-    @validate_all
     def edit(self, val, file, id):
         arg = val.split()
-        if arg[0] != id:
-            arg[0] = id
-            print('You typed another id, it was ignored')
-        arg[0] = int(arg[0])
-        if len(self.meetings) > 1:
-            for i in range(len(self.meetings)):
-                if self.meetings[i].get_field('id') == int(id):
-                    self.meetings[i] = OnlineMeeting(arg)
-        self.rewrite_file(file)
+        obj = OnlineMeeting(arg)
+        if obj.exist():
+            if arg[0] != id:
+                arg[0] = id
+                print('You typed another id, it was ignored')
+            if len(self.meetings) > 1:
+                for i in range(len(self.meetings)):
+                    if self.meetings[i].get_field('id') == int(id):
+                        self.meetings[i] = obj
+            self.rewrite_file(file)
 
     def fill_list_from_file(self, file):
         f = open(file, 'r')

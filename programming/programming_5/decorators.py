@@ -37,7 +37,7 @@ class NotUnique(Exception):
 def check_len(func):
     def inner_method(self, *args):
         try:
-            if len(args[0].split()) != 9:
+            if len(args[0]) != 9:
                 raise WrongLen
         except WrongLen:
             print('wrong  len')
@@ -51,7 +51,7 @@ def check_len(func):
 def validate_id(func):
     def inner_method(self, *args):
         try:
-            if args[0].split()[0].isdigit() is False:
+            if str(args[0][0]).isdigit() is False:
                 raise WrongId
         except WrongId:
             print('wrong id')
@@ -65,7 +65,7 @@ def validate_id(func):
 def validate_name(func):
     def inner_method(self, *args):
         try:
-            if False in [args[0].split()[5].isalpha(), args[0].split()[6].isalpha(), args[0].split()[7].isalpha(), args[0].split()[8].isalpha()]:
+            if False in [args[0][5].isalpha(), args[0][6].isalpha(), args[0][7].isalpha(), args[0][8].isalpha()]:
                 raise WrongName
         except WrongName:
             print('wrong name')
@@ -79,7 +79,7 @@ def validate_name(func):
 def validate_date(func):
     def inner_method(self, *args):
         try:
-            dt = datetime.strptime(args[0].split()[1], "%d.%m.%Y")
+            dt = datetime.strptime(args[0][1], "%d.%m.%Y")
         except:
             print('wrong date')
             return
@@ -92,8 +92,8 @@ def validate_date(func):
 def validate_time(func):
     def inner_method(self, *args):
         try:
-            dt1 = datetime.strptime(args[0].split()[1] + ' ' + args[0].split()[2], "%d.%m.%Y %H:%M")
-            dt2 = datetime.strptime(args[0].split()[1] + ' ' + args[0].split()[3], "%d.%m.%Y %H:%M")
+            dt1 = datetime.strptime(args[0][1] + ' ' + args[0][2], "%d.%m.%Y %H:%M")
+            dt2 = datetime.strptime(args[0][1] + ' ' + args[0][3], "%d.%m.%Y %H:%M")
             if dt1 > dt2:
                 raise TimeConflict
         except:
@@ -108,7 +108,7 @@ def validate_time(func):
 def validate_url(func):
     def inner_method(self, *args):
         try:
-            result = re.match(r'^(?:http|ftp)s?:\/(?:\/[\w.?=]+){2,}$', args[0].split()[4])
+            result = re.match(r'^(?:http|ftp)s?:\/(?:\/[\w.?=]+){2,}$', args[0][4])
             if result is None:
                 raise WrongUrl
         except WrongUrl:

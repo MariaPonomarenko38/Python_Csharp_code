@@ -1,3 +1,5 @@
+from Ponomarenko_pmi25.programming.programming_5.decorators import *
+
 fields = ['id', 'date', 'start_time', 'end_time', 'meeting_url', 'owner', 'participant']
 
 
@@ -30,7 +32,18 @@ class OnlineMeeting:
     def __init__(self, args):
         for i, elem in enumerate(args):
             if i < 5:
+                setattr(self, fields[i], None)
+        self.owner = None
+        self.participant = None
+        self.set_fields(args)
+
+    @validate_all
+    def set_fields(self, args):
+        for i, elem in enumerate(args):
+            if i < 5 and i != 0:
                 setattr(self, fields[i], elem)
+            elif i == 0:
+                setattr(self, fields[i], int(elem))
         self.owner = FullName(args[5], args[6])
         self.participant = FullName(args[7], args[8])
 
@@ -48,7 +61,6 @@ class OnlineMeeting:
             s += str(d1[i]) + ' '
         s = s.rstrip(' ')
         return s
-
 
     def compare(self, other):
         d1 = self.__dict__
@@ -69,6 +81,9 @@ class OnlineMeeting:
         if param in d1.keys():
             return getattr(self, param)
 
+    def exist(self):
+        return self.id is not None
+
     def change_field(self, param, value):
         if param in {'date', 'start_time', 'end_time', 'meeting_url'}:
             setattr(self, param, value)
@@ -76,3 +91,4 @@ class OnlineMeeting:
             self.owner.set_value(*value.split())
         elif param == 'participant':
             self.participant.set_value(*value.split())
+
