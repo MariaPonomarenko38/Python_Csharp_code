@@ -1,0 +1,6 @@
+John econom 13:40 15:10 Kiev Lviv
+Karen econom 13:40 15:10 Kiev Harkiv
+Gleb comfort 19:50 20:20 Kiev Berdyansk
+Mark comfort 19:50 20:20 Berdyansk Pokrovsk
+Marta comfort 19:50 20:20 Berdyansk Mariupol
+Zen minibus 06:20 20:20 Berdyansk Kiev
