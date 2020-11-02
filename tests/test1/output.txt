@@ -1,2 +1,2 @@
-comfort:2
-minibus:1
+comfort:4
+econom:2
