@@ -68,6 +68,9 @@ class Meetings:
 
     def add(self, val, file, param=None):
         arg = val.split()
+        if len(arg) != 9:
+            print('Not all arguments were inputed')
+            return
         obj = OnlineMeeting(arg)
         if obj.exist():
             if self.unique_ind.count(arg[0]) == 0:
@@ -88,6 +91,9 @@ class Meetings:
 
     def edit(self, val, file, id):
         arg = val.split()
+        if len(arg) != 9:
+            print('Not all arguments were inputed')
+            return
         obj = OnlineMeeting(arg)
         if obj.exist():
             if arg[0] != id:
@@ -103,6 +109,9 @@ class Meetings:
         f = open(file, 'r')
         input_lines = f.readlines()
         for line in input_lines:
-            self.add(line, file, 'file')
+            if len(line.split()) != 9:
+                print('Not all arguments were inputed')
+            else:
+                self.add(line, file, 'file')
         print('Well done!')
         return self
