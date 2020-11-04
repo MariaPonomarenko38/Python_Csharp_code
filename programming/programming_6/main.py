@@ -1,6 +1,6 @@
-from proga_3.meetings import Meetings
-from proga_3.validation import validate_input, validate_file_input
-from proga_3.memento import Creator, Caretaker
+from Ponomarenko_pmi25.programming.programming_6.meetings import Meetings
+from Ponomarenko_pmi25.programming.programming_6.validation import *
+from Ponomarenko_pmi25.programming.programming_6.memento import Creator, Caretaker
 
 
 def copy_of_meetings(ls):
@@ -20,7 +20,6 @@ def memento(ls1: Meetings, originator: Creator, caretaker: Caretaker):
 ls = Meetings()
 file_name = validate_file_input()
 ls.fill_list_from_file(file_name)
-print(ls)
 originator = Creator(ls)
 caretaker = Caretaker(originator)
 caretaker.filling_stack()
@@ -56,17 +55,17 @@ while True:
         else:
             print("Wrong id")
     elif number_op == '4':
-        new_meeting = validate_input('add', False, None)
+        new_meeting = input('Input info for new meeting: ')
         if type(new_meeting) == str:
             ls1 = copy_of_meetings(ls)
-            ls1.add(file_name, new_meeting)
+            ls1.add(new_meeting, file_name)
             ls = memento(ls1, originator, caretaker)
     elif number_op == '5':
         id = input('Input id: ')
-        new_meeting = validate_input('edit', False, None)
+        new_meeting = input('Input info for new meeting: ')
         if type(new_meeting) == str:
             ls1 = copy_of_meetings(ls)
-            ls1.edit(file_name, id, new_meeting)
+            ls1.edit(new_meeting, file_name, id)
             ls = memento(ls1, originator, caretaker)
     elif number_op == '6':
         if type(ls) == 'NoneType':

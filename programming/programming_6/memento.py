@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from proga_3.online_meeting import OnlineMeeting
-from proga_3.meetings import Meetings
+from Ponomarenko_pmi25.programming.programming_6.online_meeting import OnlineMeeting
+from Ponomarenko_pmi25.programming.programming_6.meetings import Meetings
 
 
 class CurrentMemento:
@@ -40,13 +40,14 @@ class Creator:
 class Caretaker:
     id = -1
 
-    def __init__(self, originator: Creator):
+    def __init__(self, originator: Creator, max_size=5):
         self._mementos_undo = []
         self._creator = originator
+        self.max_size = max_size
 
     def filling_stack(self):
         self.id += 1
-        if len(self._mementos_undo) == 5:
+        if len(self._mementos_undo) == self.max_size:
             self._mementos_undo.pop(0)
             self.id -= 1
         self._mementos_undo.insert(self.id, self._creator.current_condition())

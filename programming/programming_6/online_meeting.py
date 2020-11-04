@@ -1,3 +1,5 @@
+from Ponomarenko_pmi25.programming.programming_6.decorators import *
+
 fields = ['id', 'date', 'start_time', 'end_time', 'meeting_url', 'owner', 'participant']
 
 
@@ -30,15 +32,86 @@ class OnlineMeeting:
     def __init__(self, args):
         for i, elem in enumerate(args):
             if i < 5:
-                setattr(self, fields[i], elem)
+                setattr(self, fields[i], None)
+        self.owner = None
+        self.participant = None
+        for i, elem in enumerate(args):
+            if i < 5:
+                setattr(self, fields[i], args[i])
         self.owner = FullName(args[5], args[6])
         self.participant = FullName(args[7], args[8])
+
+    @property
+    def id(self):
+        return self._id
+
+    @id.setter
+    @validate_id
+    def id(self, val):
+        if val is None:
+            self._id = None
+        else:
+            self._id = int(val)
+
+    @property
+    def date(self):
+        return self._date
+
+    @date.setter
+    @validate_date
+    def date(self, val):
+        self._date = val
+
+    @property
+    def start_time(self):
+        return self._start_time
+
+    @start_time.setter
+    @validate_time
+    def start_time(self, val):
+        self._start_time = val
+
+    @property
+    def end_time(self):
+        return self._end_time
+
+    @end_time.setter
+    @validate_time
+    def end_time(self, val):
+        self._end_time = val
+
+    @property
+    def meeting_url(self):
+        return self._meeting_url
+
+    @meeting_url.setter
+    @validate_url
+    def meeting_url(self, val):
+        self._meeting_url = val
+
+    @property
+    def owner(self):
+        return self._owner
+
+    @owner.setter
+    @validate_name
+    def owner(self, val: FullName):
+        self._owner = val
+
+    @property
+    def participant(self):
+        return self._participant
+
+    @participant.setter
+    @validate_name
+    def participant(self, val: FullName):
+        self._participant = val
 
     def __repr__(self):
         d1 = self.__dict__
         s = ''
         for i in d1:
-            s += i + ': ' + str(d1[i]) + '\n'
+            s += i.lstrip('_') + ': ' + str(d1[i]) + '\n'
         return s
 
     def str_format(self):
@@ -48,7 +121,6 @@ class OnlineMeeting:
             s += str(d1[i]) + ' '
         s = s.rstrip(' ')
         return s
-
 
     def compare(self, other):
         d1 = self.__dict__
@@ -66,8 +138,21 @@ class OnlineMeeting:
 
     def get_field(self, param):
         d1 = self.__dict__
-        if param in d1.keys():
-            return getattr(self, param)
+        if '_'+param in d1.keys():
+            return getattr(self, '_'+param)
+
+    def exist(self):
+        d1 = self.__dict__
+        f = True
+        for i in d1.values():
+            if i is None:
+                return False
+        dt1 = datetime.strptime(self.start_time, "%H:%M")
+        dt2 = datetime.strptime(self.end_time, "%H:%M")
+        if dt1 > dt2:
+            print('Time conflict')
+            f = False
+        return f
 
     def change_field(self, param, value):
         if param in {'date', 'start_time', 'end_time', 'meeting_url'}:
