@@ -1,3 +1,6 @@
+from Ponomarenko_pmi25.practice.practice_6.observer_classes import Event
+
+
 class Node:
     def __init__(self, data):
         self.data = data
@@ -8,6 +11,9 @@ class Node:
 
 
 class LinkedList:
+
+    event = Event()
+
     def __init__(self, nodes=None):
         self.head = None
         if nodes is not None:
@@ -41,6 +47,7 @@ class LinkedList:
 
     def pop_node(self, pos):
         current_node = self.head
+        deleted_node = self.head
         prev = 0
         if current_node is not None:
             if pos == 1:
@@ -50,20 +57,26 @@ class LinkedList:
         while current_node is not None:
             k += 1
             if k == pos:
+                deleted_node = current_node
                 break
             prev = current_node
             current_node = current_node.next
         prev.next = current_node.next
+        self.event.notify('delete', deleted_node.data, pos, self.print_list())
 
     def pop_range_of_nodes(self, pos1, pos2):
         if pos1 > pos2:
             pos1, pos2 = pos2, pos1
         k = 0
         l = pos2 - pos1 + 1
+        deleted_list = []
         for node in self:
             k += 1
             if k <= l:
                 self.pop_node(pos1)
+                deleted_list.append(node.data)
+        self.event.notify('delete', deleted_list, pos1, pos2, self.print_list())
+
 
     def insert_node(self, pos, new_data):
         k = 1
@@ -80,6 +93,7 @@ class LinkedList:
         new_node = Node(new_data)
         new_node.next = current_node.next
         current_node.next = new_node
+        self.event.notify('add', new_data, pos, self.print_list())
 
     def insert_list(self, pos, ls):
         if self.length() != 0 or pos < self.length():
@@ -88,6 +102,7 @@ class LinkedList:
         else:
             for i in ls:
                 self.push_back(i)
+        self.event.notify('add', ls, pos, self.print_list())
 
     def get_negative_node(self, param):
         current = self.head
@@ -145,7 +160,7 @@ class LinkedList:
                 current1 = current1.next
         return self
 
-    def __repr__(self):
+    def print_list(self):
         node = self.head
         nodes = []
         while node is not None:
