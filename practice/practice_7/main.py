@@ -20,26 +20,23 @@ def create_thread(func1, func2, args1, args2):
     thread1.join()
     thread2.join()
 
-def create_first_list():
-    print('Info for first list')
-    linked_list_1 = LinkedList()
-    context = Context(1)
+
+def create_first_strategy(linked_list: LinkedList):
     n = validate_input('quantity of elements')
-    a = validate_input('left_border', linked_list_1.length())
-    b = validate_input('right_border', linked_list_1.length())
-    pos = validate_input('position', linked_list_1.length())
-    linked_list_1 = context.do(linked_list_1, n, a, b, pos)
-    return linked_list_1
+    a = validate_input('left_border', linked_list.length())
+    b = validate_input('right_border', linked_list.length())
+    pos = validate_input('position', linked_list.length())
+    linked_list = context.do(linked_list, n, a, b, pos)
+    return linked_list
 
 
-def create_second_list():
-    print('Info for second list:')
-    linked_list_2 = LinkedList()
-    context = Context(2)
-    pos = validate_input('position', linked_list_2.length())
+def create_second_strategy(linked_list: LinkedList):
+    pos = validate_input('position', linked_list.length())
     file_name = validate_file_input()
-    linked_list_2 = context.do(linked_list_2, pos, file_name)
-    return linked_list_2
+    linked_list = context.do(linked_list, pos, file_name)
+    l1 = context.do(pos, file_name)
+    return linked_list
+
 
 linked_list_1 = LinkedList()
 linked_list_2 = LinkedList()
@@ -50,8 +47,8 @@ linked_list_1.event.add(Observer('delete', Logger.write_to_file))
 linked_list_2.event.add(Observer('add', Logger.write_to_file))
 linked_list_2.event.add(Observer('delete', Logger.write_to_file))
 
-linked_list_1 = create_first_list()
-linked_list_2 = create_second_list()
+context = Context(1)
+
 
 def convert_to_list(*args):
     l = []
@@ -77,11 +74,25 @@ while True:
     8. Exit
     ''')
     option = validate_input('option')
-    if option == 4:
+    if option == 1:
+        context.change_strategy(1)
+    elif option == 2:
+        context.change_strategy(2)
+    elif option == 3:
+        if context.get_strategy() == 1:
+            print('Info for first list: ')
+            linked_list_1 = create_first_strategy(linked_list_1)
+            print('Info for second list')
+            linked_list_2 = create_first_strategy(linked_list_2)
+        elif context.get_strategy() == 2:
+            print('Info for first list: ')
+            linked_list_1 = create_second_strategy(linked_list_1)
+            print('Info for second list')
+            linked_list_2 = create_second_strategy(linked_list_2)
+    elif option == 4:
         pos1 = validate_input('position', linked_list_1.length(), 'delete')
         pos2 = validate_input('position', linked_list_2.length(), 'delete')
         create_thread(linked_list_1.pop_node, linked_list_2.pop_node, convert_to_list(pos1), convert_to_list(pos2))
-
     elif option == 5:
         pos1_1 = validate_input('start_pos', linked_list_1.length())
         pos2_1 = validate_input('end_pos', linked_list_1.length())
