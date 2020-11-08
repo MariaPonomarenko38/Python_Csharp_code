@@ -37,36 +37,43 @@ class Creator:
 
 class Caretaker:
     id = -1
+    possible_to_redo = False
 
     def __init__(self, originator: Creator, max_size=5):
-        self._mementos_undo = []
+        self._mementos = []
         self._creator = originator
         self.max_size = max_size
 
     def filling_stack(self):
+        self.possible_to_redo = False
         self.id += 1
-        if len(self._mementos_undo) == self.max_size:
-            self._mementos_undo.pop(0)
+        if len(self._mementos) == self.max_size:
+            self._mementos.pop(0)
             self.id -= 1
-        self._mementos_undo.insert(self.id, self._creator.current_condition())
+        self._mementos.insert(self.id, self._creator.current_condition())
+        del self._mementos[self.id + 1:len(self._mementos) + 1]
 
     def undo_redo(self, action):
-        if not len(self._mementos_undo):
+        if not len(self._mementos):
             print('Nothing to undo')
             return
         if action == 'undo':
             if self.id == 0:
                 print('Nothing to undo')
                 return
-            memento = self._mementos_undo[self.id - 1]
+            memento = self._mementos[self.id - 1]
             self.id -= 1
-        else:
-            if self.id == 4:
+        elif action == 'redo' and self.possible_to_redo:
+            if self.id + 1 == len(self._mementos):
                 print('Nothing to redo')
                 return
-            memento = self._mementos_undo[self.id + 1]
+            memento = self._mementos[self.id + 1]
             self.id += 1
+        elif self.possible_to_redo is False:
+            print("Impossible to redo")
+            return
         self._creator.restore(memento)
+        self.possible_to_redo = True
 
 
 def copy_of_meetings(ls):
