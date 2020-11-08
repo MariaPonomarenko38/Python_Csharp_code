@@ -32,11 +32,6 @@ class OnlineMeeting:
     def __init__(self, args):
         for i, elem in enumerate(args):
             if i < 5:
-                setattr(self, fields[i], None)
-        self.owner = None
-        self.participant = None
-        for i, elem in enumerate(args):
-            if i < 5:
                 setattr(self, fields[i], args[i])
         self.owner = FullName(args[5], args[6])
         self.participant = FullName(args[7], args[8])
@@ -48,10 +43,9 @@ class OnlineMeeting:
     @id.setter
     @validate_id
     def id(self, val):
-        if val is None:
-            self._id = None
-        else:
-            self._id = int(val)
+        self._id = val
+        if self._id is not None:
+            self._id = int(self._id)
 
     @property
     def date(self):
@@ -161,3 +155,4 @@ class OnlineMeeting:
             self.owner.set_value(*value.split())
         elif param == 'participant':
             self.participant.set_value(*value.split())
+
