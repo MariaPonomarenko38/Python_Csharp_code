@@ -51,8 +51,11 @@ class LinkedList:
         prev = 0
         if current_node is not None:
             if pos == 1:
-                self.head = current_node.next
-                return
+                if param == 'get':
+                    return deleted_node
+                else:
+                    self.head = current_node.next
+                    return
         k = 0
         while current_node is not None:
             k += 1
