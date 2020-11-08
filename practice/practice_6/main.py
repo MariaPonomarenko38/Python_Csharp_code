@@ -4,10 +4,9 @@ from Ponomarenko_pmi25.practice.practice_6.observer_classes import *
 from Ponomarenko_pmi25.practice.practice_6.context import Context
 
 linked_list = LinkedList()
-a = Logger()
 
-linked_list.event.add(Observer('add', a.write_to_file))
-linked_list.event.add(Observer('delete', a.write_to_file))
+linked_list.event.add(Observer('add', Logger.write_to_file))
+linked_list.event.add(Observer('delete', Logger.write_to_file))
 
 context = Context(1)
 while True:
@@ -31,15 +30,15 @@ while True:
             n = validate_input('quantity of elements')
             a = validate_input('left_border', linked_list.length())
             b = validate_input('right_border', linked_list.length())
-            pos = validate_input('position to insert', linked_list.length())
+            pos = validate_input('position', linked_list.length())
             linked_list = context.do(linked_list, n, a, b, pos)
         elif context.get_strategy() == 2:
-            pos = validate_input('position to insert', linked_list.length())
+            pos = validate_input('position', linked_list.length())
             file_name = validate_file_input()
             linked_list = context.do(linked_list, pos, file_name)
     elif option == 4:
-        pos = validate_input('position to insert', linked_list.length(), 'delete')
-        linked_list.pop_node(pos)
+        pos = validate_input('position', linked_list.length(), 'delete')
+        linked_list.pop_range_of_nodes(pos, pos)
     elif option == 5:
         pos1 = validate_input('start_pos', linked_list.length())
         pos2 = validate_input('end_pos', linked_list.length())

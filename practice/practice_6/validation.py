@@ -61,7 +61,7 @@ def validate_input(param, val=None, action=None):
             elif param == 'option':
                 if n <= 0 or n >= 9:
                     raise OptionError
-            elif param == 'position to insert' or param == 'start_pos' or param == 'end_pos':
+            elif param == 'position' or param == 'start_pos' or param == 'end_pos':
                 if n <= 0:
                     raise PositionError
                 elif n > val + 1 and action is None:

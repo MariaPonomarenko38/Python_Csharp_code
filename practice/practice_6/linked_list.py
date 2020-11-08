@@ -45,7 +45,7 @@ class LinkedList:
             current_node = current_node.next
         current_node.next = node
 
-    def pop_node(self, pos):
+    def pop_node(self, pos, param=None):
         current_node = self.head
         deleted_node = self.head
         prev = 0
@@ -58,11 +58,13 @@ class LinkedList:
             k += 1
             if k == pos:
                 deleted_node = current_node
-                break
+                if param == 'get':
+                    return deleted_node
+                else:
+                    break
             prev = current_node
             current_node = current_node.next
         prev.next = current_node.next
-        self.event.notify('delete', deleted_node.data, pos, self.print_list())
 
     def pop_range_of_nodes(self, pos1, pos2):
         if pos1 > pos2:
@@ -73,10 +75,12 @@ class LinkedList:
         for node in self:
             k += 1
             if k <= l:
+                deleted_list.append(self.pop_node(pos1, 'get'))
                 self.pop_node(pos1)
-                deleted_list.append(node.data)
-        self.event.notify('delete', deleted_list, pos1, pos2, self.print_list())
-
+        if pos1 != pos2:
+            self.event.notify('delete', deleted_list, pos1, pos2, self.print_list())
+        else:
+            self.event.notify('delete', deleted_list, pos1, self.print_list())
 
     def insert_node(self, pos, new_data):
         k = 1
