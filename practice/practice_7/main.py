@@ -34,7 +34,6 @@ def create_second_strategy(linked_list: LinkedList):
     pos = validate_input('position', linked_list.length())
     file_name = validate_file_input()
     linked_list = context.do(linked_list, pos, file_name)
-    l1 = context.do(pos, file_name)
     return linked_list
 
 
@@ -48,6 +47,12 @@ linked_list_2.event.add(Observer('add', Logger.write_to_file))
 linked_list_2.event.add(Observer('delete', Logger.write_to_file))
 
 context = Context(1)
+
+print('Info for linked_list_1: ')
+linked_list_1 = create_first_strategy(linked_list_1)
+context.change_strategy(2)
+print('Info for linked_list_2: ')
+linked_list_2 = create_second_strategy(linked_list_2)
 
 
 def convert_to_list(*args):
