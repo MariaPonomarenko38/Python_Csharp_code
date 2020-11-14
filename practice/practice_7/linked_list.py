@@ -68,7 +68,8 @@ class LinkedList:
             prev = current_node
             current_node = current_node.next
         prev.next = current_node.next
-        self.event.notify('delete', deleted_node, pos, self.print_list())
+        if param is None:
+            self.event.notify('delete', deleted_node, pos, self.str_format())
 
     def pop_range_of_nodes(self, pos1, pos2):
         if pos1 > pos2:
@@ -80,8 +81,8 @@ class LinkedList:
             k += 1
             if k <= l:
                 deleted_list.append(self.pop_node(pos1, 'get'))
-                self.pop_node(pos1)
-        self.event.notify('delete', deleted_list, pos1, pos2, self.print_list())
+                self.pop_node(pos1, 'remove')
+        self.event.notify('delete', deleted_list, pos1, pos2, self.str_format())
 
     def insert_node(self, pos, new_data):
         k = 1
@@ -98,7 +99,6 @@ class LinkedList:
         new_node = Node(new_data)
         new_node.next = current_node.next
         current_node.next = new_node
-        #self.event.notify('add', new_data, pos, self.print_list())
 
     def insert_list(self, pos, ls):
         if self.length() != 0 or pos < self.length():
@@ -107,7 +107,7 @@ class LinkedList:
         else:
             for i in ls:
                 self.push_back(i)
-        self.event.notify('add', ls, pos, self.print_list())
+        self.event.notify('add', ls, pos, self.str_format())
 
     def get_negative_node(self, param):
         current = self.head
@@ -165,7 +165,7 @@ class LinkedList:
                 current1 = current1.next
         return self
 
-    def print_list(self):
+    def str_format(self):
         node = self.head
         nodes = []
         while node is not None:

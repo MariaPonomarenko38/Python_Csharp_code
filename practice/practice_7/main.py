@@ -5,13 +5,6 @@ from Ponomarenko_pmi25.practice.practice_7.context import Context
 from threading import Thread
 
 
-def write_to_file(*args):
-    f = open('output1.txt', 'a')
-    for i in args:
-        f.write(str(i) + ' ')
-    f.write('\n')
-
-
 def create_thread(func1, func2, args1, args2):
     thread1 = Thread(target=func1, args=(*args1,))
     thread2 = Thread(target=func2, args=(*args2,))
@@ -112,7 +105,8 @@ while True:
 
         create_thread(cycle_and_rotate, cycle_and_rotate, convert_to_list(linked_list_1, k1), convert_to_list(linked_list_2, k2))
     elif option == 7:
-        create_thread(write_to_file, write_to_file, convert_to_list('first list:', linked_list_1.print_list()),  convert_to_list('second list:', linked_list_2.print_list()))
+        print(linked_list_1.str_format())
+        print(linked_list_2.str_format())
     elif option == 8:
         f = open('output1.txt', 'r+')
         f.truncate(0)
