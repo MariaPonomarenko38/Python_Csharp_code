@@ -4,7 +4,7 @@ from .views import OnlineMeetingCreateView, MeetingsListView, OnlineMeetingDetai
 
 app_name = 'meeting'
 urlpatterns = [
-    path('meeting/create/', OnlineMeetingCreateView.as_view()),
+    path('meetings/create/', OnlineMeetingCreateView.as_view()),
     path('meetings/', MeetingsListView.as_view()),
-    path('meeting/detail/<int:pk>/', OnlineMeetingDetailView.as_view()),
+    path('meetings/<int:pk>/', OnlineMeetingDetailView.as_view()),
 ]
