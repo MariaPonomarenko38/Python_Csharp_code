@@ -1,16 +1,10 @@
 from rest_framework import generics
 from .serializers import OnlineMeetingDetailSerializer, MeetingsListSerializer
 from .models import OnlineMeeting
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter, SearchFilter
 
 
-class OnlineMeetingCreateView(generics.CreateAPIView):
-    serializer_class = OnlineMeetingDetailSerializer
-    queryset = OnlineMeeting.objects.all()
-
-
-class MeetingsListView(generics.ListAPIView):
+class MeetingsListView(generics.ListAPIView, generics.CreateAPIView):
     filter_backends = [OrderingFilter, SearchFilter]
     queryset = OnlineMeeting.objects.all()
     serializer_class = MeetingsListSerializer
