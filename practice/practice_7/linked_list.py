@@ -55,6 +55,7 @@ class LinkedList:
                     return deleted_node
                 else:
                     self.head = current_node.next
+                    self.event.notify('delete', deleted_node, pos, self.str_format())
                     return
         k = 0
         while current_node is not None:
@@ -69,6 +70,7 @@ class LinkedList:
             current_node = current_node.next
         prev.next = current_node.next
         if param is None:
+            print('!')
             self.event.notify('delete', deleted_node, pos, self.str_format())
 
     def pop_range_of_nodes(self, pos1, pos2):

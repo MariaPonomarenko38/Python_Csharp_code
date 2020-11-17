@@ -5,13 +5,29 @@ from Ponomarenko_pmi25.practice.practice_7.context import Context
 from threading import Thread
 
 
-def create_thread(func1, func2, args1, args2):
-    thread1 = Thread(target=func1, args=(*args1,))
-    thread2 = Thread(target=func2, args=(*args2,))
-    thread1.start()
-    thread2.start()
-    thread1.join()
-    thread2.join()
+class Object:
+
+    def __init__(self, li, size=2):
+        self.arguments = li
+        self.size = size
+
+    def get_list_for_each(self):
+        result = []
+        c = len(self.arguments) // self.size
+        for i in range(0, len(self.arguments), c):
+            a = []
+            for j in range(i, i + c):
+                a.append(self.arguments[j])
+            result.append(a)
+        return result
+
+
+def create_thread(li_of_funcs, obj: Object):
+    args1 = obj.get_list_for_each()
+    for i in range(len(li_of_funcs)):
+        thread = Thread(target=li_of_funcs[i], args=(*args1[i],))
+        thread.start()
+        thread.join()
 
 
 def create_first_strategy(linked_list: LinkedList):
@@ -46,13 +62,6 @@ linked_list_1 = create_first_strategy(linked_list_1)
 context.change_strategy(2)
 print('Info for linked_list_2: ')
 linked_list_2 = create_second_strategy(linked_list_2)
-
-
-def convert_to_list(*args):
-    l = []
-    for i in args:
-        l.append(i)
-    return l
 
 
 def cycle_and_rotate(linked_list: LinkedList, k):
@@ -90,7 +99,7 @@ while True:
     elif option == 4:
         pos1 = validate_input('position', linked_list_1.length(), 'delete')
         pos2 = validate_input('position', linked_list_2.length(), 'delete')
-        create_thread(linked_list_1.pop_node, linked_list_2.pop_node, convert_to_list(pos1), convert_to_list(pos2))
+        create_thread([linked_list_1.pop_node, linked_list_2.pop_node], Object([pos1, pos2]))
     elif option == 5:
         pos1_1 = validate_input('start_pos', linked_list_1.length())
         pos2_1 = validate_input('end_pos', linked_list_1.length())
@@ -98,12 +107,12 @@ while True:
         pos1_2 = validate_input('start_pos', linked_list_2.length())
         pos2_2 = validate_input('end_pos', linked_list_2.length())
 
-        create_thread(linked_list_1.pop_range_of_nodes, linked_list_2.pop_range_of_nodes, convert_to_list(pos1_1, pos2_1), convert_to_list(pos1_2, pos2_2))
+        create_thread([linked_list_1.pop_range_of_nodes, linked_list_2.pop_range_of_nodes], Object([pos1_1, pos2_1, pos1_2, pos2_2]))
     elif option == 6:
         k1 = validate_input('k')
         k2 = validate_input('k')
 
-        create_thread(cycle_and_rotate, cycle_and_rotate, convert_to_list(linked_list_1, k1), convert_to_list(linked_list_2, k2))
+        create_thread([cycle_and_rotate, cycle_and_rotate], Object([linked_list_1, k1, linked_list_2, k2]))
     elif option == 7:
         print(linked_list_1.str_format())
         print(linked_list_2.str_format())
