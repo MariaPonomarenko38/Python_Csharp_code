@@ -1,3 +1,5 @@
+import threading
+
 from Ponomarenko_pmi25.practice.practice_7.linked_list import LinkedList
 from Ponomarenko_pmi25.practice.practice_7.validation import *
 from Ponomarenko_pmi25.practice.practice_7.observer import *
@@ -24,10 +26,13 @@ class Object:
 
 def create_thread(li_of_funcs, obj: Object):
     args1 = obj.get_list_for_each()
+    current_threads = []
     for i in range(len(li_of_funcs)):
-        thread = Thread(target=li_of_funcs[i], args=(*args1[i],))
+        thread = threading.Thread(target=li_of_funcs[i], args=(*args1[i],))
         thread.start()
-        thread.join()
+        current_threads.append(thread)
+    for i in range(len(current_threads)):
+        current_threads[i].join()
 
 
 def create_first_strategy(linked_list: LinkedList):
