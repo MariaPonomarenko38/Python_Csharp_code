@@ -85,7 +85,7 @@ class LinkedList:
         else:
             self.event.notify('delete', deleted_list, pos1, self.print_list())
 
-    def insert_node(self, pos, new_data):
+    def insert_node(self, pos, new_data, param):
         k = 1
         current_node = self.head
         if k == pos:
@@ -100,12 +100,13 @@ class LinkedList:
         new_node = Node(new_data)
         new_node.next = current_node.next
         current_node.next = new_node
-        self.event.notify('add', new_data, pos, self.print_list())
+        if param != 'get':
+            self.event.notify('add', new_data, pos, self.print_list())
 
     def insert_list(self, pos, ls):
         if self.length() != 0 or pos < self.length():
             for i, elem in enumerate(ls):
-                self.insert_node(pos + i, elem)
+                self.insert_node(pos + i, elem, 'get')
         else:
             for i in ls:
                 self.push_back(i)
