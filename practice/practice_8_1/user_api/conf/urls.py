@@ -22,7 +22,7 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('api/login/', TokenObtainPairView.as_view()),
     path('api/token/refresh/', TokenRefreshView.as_view()),
-    path('api/', include('collection.urls')),
-    path('api/', include('user.urls')),
+    path('api/', include('api.collection.urls')),
+    path('api/', include('api.user.urls')),
     path('admin/', admin.site.urls),
 ]
