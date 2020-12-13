@@ -12,16 +12,17 @@ class OrderView(generics.CreateAPIView, generics.ListAPIView):
 
     def post(self, request, format=None):
         pk = request.data['meeting']
-        serializer = OrderSerializer(data=request.data)
-        meet = Meeting.objects.get(id=pk[0])
-
+        if Meeting.objects.filter(id=pk[0]).exists():
+            meet = Meeting.objects.get(id=pk[0])
+        else:
+            return Response({"message": "Was not found"})
         user_list = Order.objects.filter(user=request.user)
         for order in user_list:
             for meeti in order.meeting.all():
                 if meeti.id == pk[0]:
-                    return Response(status=status.HTTP_400_BAD_REQUEST)
+                    return Response({"message": "You have already subscribed on this meeting"})
         if meet.max_count == 0:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "There are no available places"})
         meet.max_count -= 1
         meet.save()
 
@@ -30,10 +31,7 @@ class OrderView(generics.CreateAPIView, generics.ListAPIView):
         conv.save()
         conv.meeting.add(meet)
 
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_201_CREATED)
 
     def get_queryset(self):
         return Order.objects.filter(user=self.request.user)

@@ -6,6 +6,7 @@ from rest_framework.filters import OrderingFilter, SearchFilter
 from .permissions import ReadOnlyOrAdmin
 from rest_framework.pagination import PageNumberPagination
 import constants
+from rest_framework.response import Response
 
 
 class PageNumberAsLimitOffset(PageNumberPagination):
@@ -32,7 +33,7 @@ class MeetingsView(generics.ListAPIView, generics.CreateAPIView):
 
 class OnlineMeetingDetailView(generics.RetrieveUpdateDestroyAPIView):
     def get_permissions(self):
-        if self.request.method == 'GET' or self.request.method == 'PUT':
+        if self.request.method == 'GET' or self.request.method == 'PUT' or self.request.method == 'DELETE':
             return (permissions.IsAuthenticated(), IsAdminUser(), )
     serializer_class = OnlineMeetingDetailSerializer
     queryset = Meeting.objects.all()
