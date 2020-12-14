@@ -15,14 +15,14 @@ class OrderView(generics.CreateAPIView, generics.ListAPIView):
         if Meeting.objects.filter(id=pk[0]).exists():
             meet = Meeting.objects.get(id=pk[0])
         else:
-            return Response({"message": "Was not found"})
+            return Response(status=status.HTTP_400_BAD_REQUEST)
         user_list = Order.objects.filter(user=request.user)
         for order in user_list:
             for meeti in order.meeting.all():
                 if meeti.id == pk[0]:
-                    return Response({"message": "You have already subscribed on this meeting"})
+                    return Response(status=status.HTTP_400_BAD_REQUEST)
         if meet.max_count == 0:
-            return Response({"message": "There are no available places"})
+            return Response(status=status.HTTP_400_BAD_REQUEST)
         meet.max_count -= 1
         meet.save()
 
