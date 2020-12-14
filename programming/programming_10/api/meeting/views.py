@@ -26,7 +26,7 @@ class MeetingsView(generics.ListAPIView, generics.CreateAPIView):
     serializer_class = OnlineMeetingDetailSerializer
     search_fields = ['date', 'end_time', 'id', 'meeting_url', 'owner_first_name', 'owner_last_name', 'start_time']
     ordering_fields = '__all__'
-    permission_classes = (ReadOnlyOrAdmin,)
+    permission_classes = (ReadOnlyOrAdmin, )
     pagination_class = PageNumberAsLimitOffset
     queryset = Meeting.objects.all()
 
