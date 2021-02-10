@@ -1,0 +1,7 @@
+C:\code\practice_uni\c#_practice\pr_task_1\Task_1\Task_1\bin\Debug\Task_1.exe.config
+C:\code\practice_uni\c#_practice\pr_task_1\Task_1\Task_1\bin\Debug\Task_1.exe
+C:\code\practice_uni\c#_practice\pr_task_1\Task_1\Task_1\bin\Debug\Task_1.pdb
+C:\code\practice_uni\c#_practice\pr_task_1\Task_1\Task_1\obj\Debug\Task_1.csprojAssemblyReference.cache
+C:\code\practice_uni\c#_practice\pr_task_1\Task_1\Task_1\obj\Debug\Task_1.csproj.CoreCompileInputs.cache
+C:\code\practice_uni\c#_practice\pr_task_1\Task_1\Task_1\obj\Debug\Task_1.exe
+C:\code\practice_uni\c#_practice\pr_task_1\Task_1\Task_1\obj\Debug\Task_1.pdb
