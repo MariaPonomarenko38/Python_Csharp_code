@@ -7,24 +7,6 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-public class LengthException : Exception
-{
-    public LengthException(string message)
-        : base(message)
-    { }
-}
-public class NameException : Exception
-{
-    public NameException(string message)
-        : base(message)
-    { }
-}
-public class TimeException : Exception
-{
-    public TimeException(string message)
-        : base(message)
-    { }
-}
 
 namespace Task_1
 {
@@ -40,20 +22,34 @@ namespace Task_1
             return obj.ValidateAll(str);
         }
 
-        public static bool ValidateFileName(string val)
+        public static string ValidateFileName()
         {
-            return File.Exists(val);
+            while (true)
+            {
+                Console.WriteLine("Write file name:");
+                string val = Console.ReadLine();
+                try
+                {
+                    if (File.Exists(val) == false)
+                    {
+                        throw new Exception("File doensn't exist");
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    continue;
+                }
+                return val;
+            }
         }
 
         public static void ValidateFileInput(string file)
         {
             string[] lines = File.ReadAllLines(file);
             File.WriteAllText(file, string.Empty);
-            // Display the file contents by using a foreach loo
-
             foreach (string line in lines)
             {
-                // Use a tab to indent each line of the file.
                 Validation v = new Validation(line);
                 if (v.ValidateAll("add") == true)
                 {
@@ -79,12 +75,12 @@ namespace Task_1
             {
                 if (l.Length != 7)
                 {
-                    throw new LengthException("Wrong Length!");
+                    throw new Exception("Wrong Length!");
                 }
             }
-            catch (LengthException)
+            catch (Exception e)
             {
-                Console.WriteLine("Wrong Length");
+                Console.WriteLine(e.Message);
                 return false;
             }
             return true;
@@ -96,19 +92,19 @@ namespace Task_1
             {
                 if (regexItem.IsMatch(l[5]) == false || regexItem.IsMatch(l[6]) == false)
                 {
-                    throw new NameException("Wrong Name!");
+                    throw new Exception("Wrong Name!");
                 }
             }
-            catch (NameException)
+            catch(Exception e)
             {
-                Console.WriteLine("Wrong Name!");
+                Console.WriteLine(e.Message);
                 return false;
             }
             return true;
         }
         public bool CheckUrl()
         {
-            bool isUri = Uri.IsWellFormedUriString(l[4], UriKind.RelativeOrAbsolute);
+            bool isUri = Uri.IsWellFormedUriString(l[4], UriKind.Absolute);
             try
             {
                 if (isUri == false)
@@ -116,26 +112,27 @@ namespace Task_1
                     throw new Exception();
                 }
             }
-            catch
+            catch (Exception e)
             {
-                Console.WriteLine("Wrong Url!");
+                Console.WriteLine(e.Message);
                 return false;
             }
             return true;
         }
         public bool CheckTime()
         {
-            var regexItem = new Regex("^(?:0?[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$");
             try
             {
-                if (regexItem.IsMatch(l[2]) == false || regexItem.IsMatch(l[3]) == false)
+                DateTime dt = DateTime.Parse(l[2]);
+                DateTime dt1 = DateTime.Parse(l[3]);
+                if (dt > dt1)
                 {
-                    throw new NameException("Wrong Time!");
+                    throw new Exception("Time conflict!");
                 }
             }
-            catch (NameException)
+            catch (Exception e)
             {
-                Console.WriteLine("Wrong Time!");
+                Console.WriteLine(e.Message);
                 return false;
             }
             return true;
@@ -145,14 +142,15 @@ namespace Task_1
             try
             {
                 DateTime dt = DateTime.Parse(l[1]);
-                if (dt.Year < 2021)
+                DateTime dt1 = DateTime.Now;
+                if (dt < dt1)
                 {
-                    throw new Exception();
+                    throw new Exception("Wrong date");
                 }
             }
-            catch
+            catch (Exception e)
             {
-                Console.WriteLine("Wrong Date!");
+                Console.WriteLine(e.Message);
                 return false;
             }
             return true;
@@ -163,12 +161,12 @@ namespace Task_1
             {
                 if (Id.ids.Contains(l[0]) || l[0].All(char.IsDigit) == false)
                 {
-                    throw new Exception();
+                    throw new Exception("Wrong id!");
                 }
             }
-            catch
+            catch (Exception e)
             {
-                Console.WriteLine("Wrong Id!");
+                Console.WriteLine(e.Message);
                 return false;
             }
             Id.ids.Add(l[0]);

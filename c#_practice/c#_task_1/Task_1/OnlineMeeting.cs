@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace Task_1
 {
+    public class ListOfFields
+    {
+        public static String[] fields = { "id", "date", "start_time", "end_time", "meeting_url", "owner", "participant" };
+    }
     public class OnlineMeeting
     {
         string id;
@@ -20,13 +24,10 @@ namespace Task_1
         public OnlineMeeting(string s)
         {
             String[] l = s.Split(';');
-            id = l[0];
-            date = l[1];
-            start_time = l[2];
-            end_time = l[3];
-            meeting_url = l[4];
-            owner = l[5];
-            participant = l[6];
+            for (int i = 0; i < ListOfFields.fields.Length; i++)
+            {
+                this.Set(ListOfFields.fields[i], l[i]);
+            }
         }
         public List<object> GetFields()
         {
@@ -36,11 +37,10 @@ namespace Task_1
         }
         public string Get(string s)
         {
-            string[] fields = { "id", "date", "start_time", "end_time", "meeting_url", "owner", "participant" };
             int i = 0;
             foreach (var item in GetFields())
             {
-                if (fields[i] == s)
+                if (ListOfFields.fields[i] == s)
                 {
                     return Convert.ToString(item);
                 }
@@ -69,11 +69,10 @@ namespace Task_1
         public override String ToString()
         {
             string res = "";
-            string[] fields = { "id", "date", "start_time", "end_time", "meeting_url", "owner", "participant" };
             int i = 0;
             foreach (var item in GetFields())
             {
-                res += fields[i] + ": " + item + '\n';
+                res += ListOfFields.fields[i] + ": " + item + '\n';
                 i++;
             }
             return res;
