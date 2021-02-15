@@ -163,6 +163,10 @@ namespace Task_1
                 {
                     throw new Exception("Wrong id!");
                 }
+                else if(Int32.Parse(l[0]) == 0)
+                {
+                    throw new Exception("Id can't be zero!");
+                }
             }
             catch (Exception e)
             {

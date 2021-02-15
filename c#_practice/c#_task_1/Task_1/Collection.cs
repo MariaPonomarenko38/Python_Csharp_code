@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace Task_1
 {
+    public class Sorting
+    {
+        public static String []fields = {"id", "owner", "participant", "start_time", "end_time", "date"};
+    }
     public class Collection
     {
         List<OnlineMeeting> li;
@@ -121,7 +125,7 @@ namespace Task_1
 
         public void Sort(string param)
         {
-            if (param != "id" && param != "owner" && param != "participant" && param != "start_time" && param != "end_time" && param != "date")
+            if (Sorting.fields.Contains(param) == false)
             {
                 Console.WriteLine("Can't sort by this parametr");
                 return;
