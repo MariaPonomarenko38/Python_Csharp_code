@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bin\Release\data.txt" />
+    <Content Include="bin\Release\not_valid.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

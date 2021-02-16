@@ -109,7 +109,7 @@ namespace Task_1
             {
                 if (isUri == false)
                 {
-                    throw new Exception();
+                    throw new Exception("Wrong Url!");
                 }
             }
             catch (Exception e)

@@ -62,6 +62,7 @@ namespace Task_1
                 if (i.Get("id") == id)
                 {
                     li.Remove(i);
+                    Id.ids.Remove(id);
                     size--;
                     RewriteFile(file);
                     return;
