@@ -10,7 +10,7 @@ namespace Task_2
 {
     class MainProgram
     {
-        public static class FillCollection<T> where T : OnlineMeeting, new()
+        public static class FillCollection<T> where T : MobileNumber, new()
         {
             public static Collection<T> Method(string file) 
             {
@@ -27,11 +27,13 @@ namespace Task_2
                         {
                             instance = Activator.CreateInstance(typeof(T), new object[] { line }) as T;
                         }
-                        catch (System.Reflection.TargetInvocationException)
+                        catch //(System.Reflection.TargetInvocationException)
                         {
+                            //Console.WriteLine(e.InnerException.Message);
                             Console.WriteLine("Wrong format of some values!");
                             continue;
                         }
+                        Console.WriteLine(instance);
                         a.AddTo(instance, "None");
                     }   
                 }
@@ -41,8 +43,18 @@ namespace Task_2
         }
         static void Main(string[] args)
         {
+            //try
+            //{
+            //    MobileNumber a = new MobileNumber("6;Kateryna;Korniienko;+38055250;5056;56304892;5000.50;2010-03-09;");
+            //}
+            //catch
+            //{
+            //    Console.WriteLine("OPPS");
+            //}
+            ////Console.WriteLine(a);
             string file_name = Input.ValidateFileName();
-            Collection<OnlineMeeting> ls = FillCollection<OnlineMeeting>.Method(file_name);
+            Collection<MobileNumber> ls = FillCollection<MobileNumber>.Method(file_name);
+            //Collection<MobileNumber> ls = new Collection<MobileNumber>();
             while (true)
             {
                 Console.WriteLine(@"Input number of option:
@@ -79,10 +91,10 @@ namespace Task_2
                 }
                 else if (num == "4")
                 {
-                    OnlineMeeting obj = new OnlineMeeting();
+                    MobileNumber obj = new MobileNumber();
                     try
                     {
-                        obj = new OnlineMeeting(val);
+                        obj = new MobileNumber(val);
                     }
                     catch 
                     {

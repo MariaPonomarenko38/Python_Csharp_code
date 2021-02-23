@@ -14,7 +14,7 @@ namespace Task_2
     {
         public static List<string> unique = new List<string>();
     }
-    public class Collection<T>
+    public class Collection<T> 
     {
         List<T> li;
         int size;
@@ -27,15 +27,15 @@ namespace Task_2
 
         public void AddTo(T obj, string file_name)
         {
-            li.Add(obj);
-            Type o = obj.GetType();  
-            var a = o.GetField("id", bindingFlags).GetValue(obj).ToString();
+            Type o = obj.GetType();
+            var a = o.GetField("_id", bindingFlags).GetValue(obj).ToString();
             if (Ids.unique.Contains(a.ToString()))
             {
                 Console.WriteLine("Id is not unique!");
                 return;
             }
             Ids.unique.Add(a.ToString());
+            li.Add(obj);
             if (file_name != "None") { RewriteFile(file_name); }
             size++;
         }
@@ -45,7 +45,7 @@ namespace Task_2
             for (int i = 0; i < size; i++)
             {
                 Type obj = li[i].GetType();
-                var a = obj.GetField("id", bindingFlags).GetValue(li[i]).ToString();
+                var a = obj.GetField("_id", bindingFlags).GetValue(li[i]).ToString();
                 if (a.Equals(id))
                 {
                     li.Remove(li[i]);
@@ -60,7 +60,7 @@ namespace Task_2
         {
             Type type = typeof(T);
             PropertyInfo prop = type.GetProperty(field);
-            if (field.ToLower() == "id")
+            if (field.ToLower() == "_id")
             {
                 Console.WriteLine("You can't change id!");
                 return;
@@ -70,7 +70,7 @@ namespace Task_2
             for (int i = 0; i < size; i++)
             {
                 Type obj = li[i].GetType();
-                var a = obj.GetField("id", bindingFlags).GetValue(li[i]).ToString();
+                var a = obj.GetField("_id", bindingFlags).GetValue(li[i]).ToString();
                 if (a.Equals(id))
                 {
                     try { prop.SetValue(li[i], Convert.ChangeType(new_value, prop.PropertyType)); }

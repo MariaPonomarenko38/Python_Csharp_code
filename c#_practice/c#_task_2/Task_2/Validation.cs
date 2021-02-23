@@ -40,7 +40,7 @@ namespace Task_2
             if (a > b)
             {
                 Console.WriteLine("We have time conflict");
-                throw new Exception();
+                throw new Exception("We have time conflict");
             }
             else
             {
@@ -53,7 +53,7 @@ namespace Task_2
             if (regexItem.IsMatch(val) == false)
             {
                 Console.WriteLine("Wrong name");
-                throw new Exception();
+                throw new Exception("Wrong name");
             }
             else
             {
@@ -65,7 +65,7 @@ namespace Task_2
             if (Uri.IsWellFormedUriString(val, UriKind.Absolute) == false)
             {
                 Console.WriteLine("Wrong URL");
-                throw new Exception();
+                throw new Exception("Wrong URL");
             }
             else
             {
@@ -79,7 +79,7 @@ namespace Task_2
             if (dt < dt1)
             {
                 Console.WriteLine("Date conflict");
-                throw new Exception();
+                throw new Exception("Date conflict");
             }
             else
             {
