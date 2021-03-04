@@ -69,14 +69,13 @@ namespace WebApplication1.DataAccess
                     query = query.OrderBy(expr);
                 }
             }
+            var list = (from r in query select r).AsEnumerable();
             if (!string.IsNullOrEmpty(ownerParameters.Search))
-            {
-                query = query.Where(
-                    c => c.Owner.Contains(ownerParameters.Search) || c.Date.ToString().Contains(ownerParameters.Search) ||
-                         c.Start_time.Contains(ownerParameters.Search) || c.End_time.Contains(ownerParameters.Search) ||
-                         c.Url.Contains(ownerParameters.Search) || c.Participant.Contains(ownerParameters.Search));
+            {       
+                var stringProperties = typeof(Meeting).GetProperties();
+                list = list.Where(c => stringProperties.Any(prop => prop.GetValue(c, null).ToString().Contains(ownerParameters.Search)));
             }
-            return query.Skip((ownerParameters.PageNumber - 1) * ownerParameters.PageSize).Take(ownerParameters.PageSize);
+            return list.Skip((ownerParameters.PageNumber - 1) * ownerParameters.PageSize).Take(ownerParameters.PageSize);
         }
         public bool MeetingExists(string id)
         {

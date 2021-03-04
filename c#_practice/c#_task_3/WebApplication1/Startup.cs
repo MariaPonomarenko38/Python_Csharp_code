@@ -34,8 +34,6 @@ namespace WebApplication1
             options.UseNpgsql(Configuration.GetConnectionString("MyWebApplication")));
 
             services.AddScoped<IDataAccessProvider, DataAccessProvider>();
-           // services.AddControllers().AddJsonOptions(options =>
-           // options.JsonSerializerOptions.Converters.Add(new TimeSpantoStringConverter()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
