@@ -7,17 +7,16 @@ namespace WebApplication1.Models
 {
 	public class OwnerParameters
 	{
-		const int maxPageSize = 50;
 		public int PageNumber { get; set; } = 1;
 
-		private int _pageSize = 10;
+		private int _pageSize;
 		private string _sort_by = "Owner";
 		private string _sort_type = "asc";
 		private string _search;
 		public int PageSize
 		{
 			get { return _pageSize; }
-			set { _pageSize = (value > maxPageSize) ? maxPageSize : value; }
+			set { _pageSize = value; }
 		}
 		public string Sort_by
 		{

@@ -75,6 +75,10 @@ namespace WebApplication1.DataAccess
                 var stringProperties = typeof(Meeting).GetProperties();
                 list = list.Where(c => stringProperties.Any(prop => prop.GetValue(c, null).ToString().Contains(ownerParameters.Search)));
             }
+            if(!string.IsNullOrEmpty(ownerParameters.PageSize.ToString()))
+            {
+                ownerParameters.PageSize = list.Count();
+            }
             return list.Skip((ownerParameters.PageNumber - 1) * ownerParameters.PageSize).Take(ownerParameters.PageSize);
         }
         public bool MeetingExists(string id)
