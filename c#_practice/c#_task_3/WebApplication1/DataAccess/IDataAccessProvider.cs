@@ -13,7 +13,7 @@ namespace WebApplication1.DataAccess
         void DeleteMeetingRecord(string id);
         Meeting GetMeetingSingleRecord(string id);
         List<Meeting> GetMeetingRecords();
-        IEnumerable<Meeting> GetRecords(OwnerParameters ownerParameters);
+        IQueryable<Meeting> GetRecords(OwnerParameters ownerParameters);
         bool MeetingExists(string id);
     }
 }

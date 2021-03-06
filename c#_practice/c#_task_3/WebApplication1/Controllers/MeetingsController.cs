@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.DataAccess;
 using WebApplication1.Models;
+using LightQuery;
 
 namespace WebApplication2.Controllers
 {
@@ -13,16 +14,18 @@ namespace WebApplication2.Controllers
     public class MeetingsController : ControllerBase
     {
         private readonly IDataAccessProvider _dataAccessProvider;
-
         public MeetingsController(IDataAccessProvider dataAccessProvider)
         {
             _dataAccessProvider = dataAccessProvider;
         }
 
+        [LightQuery(forcePagination: false, defaultPageSize: 3)]
+        [ProducesResponseType(typeof(IEnumerable<Meeting>), 200)]
         [HttpGet]
-        public IEnumerable<Meeting> GetMeetings([FromQuery] OwnerParameters ownerParameters)
+        public IActionResult GetMeetings([FromQuery] OwnerParameters ownerParameters)
         {
-            return _dataAccessProvider.GetRecords(ownerParameters);
+            var values = _dataAccessProvider.GetRecords(ownerParameters);
+            return Ok(values);
         }
 
         [HttpPost]

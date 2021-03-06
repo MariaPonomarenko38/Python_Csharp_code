@@ -47,7 +47,7 @@ namespace WebApplication1.DataAccess
         {
             return _context.meetings.ToList();
         }
-        public IEnumerable<Meeting> GetRecords(OwnerParameters ownerParameters)
+        public IQueryable<Meeting> GetRecords(OwnerParameters ownerParameters)
         {
             IQueryable<Meeting> query = _context.meetings;
 
@@ -75,11 +75,8 @@ namespace WebApplication1.DataAccess
                 var stringProperties = typeof(Meeting).GetProperties();
                 list = list.Where(c => stringProperties.Any(prop => prop.GetValue(c, null).ToString().Contains(ownerParameters.Search)));
             }
-            if(!string.IsNullOrEmpty(ownerParameters.PageSize.ToString()))
-            {
-                ownerParameters.PageSize = list.Count();
-            }
-            return list.Skip((ownerParameters.PageNumber - 1) * ownerParameters.PageSize).Take(ownerParameters.PageSize);
+            var list1 = list.AsQueryable();
+            return list1;
         }
         public bool MeetingExists(string id)
         {
