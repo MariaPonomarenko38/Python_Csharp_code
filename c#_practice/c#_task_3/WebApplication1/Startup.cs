@@ -13,6 +13,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApplication1.Models;
 using WebApplication1.DataAccess;
+using System.Reflection;
+using System.IO;
 
 namespace WebApplication1
 {
@@ -34,6 +36,19 @@ namespace WebApplication1
             options.UseNpgsql(Configuration.GetConnectionString("MyWebApplication")));
 
             services.AddScoped<IDataAccessProvider, DataAccessProvider>();
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1",
+                    new Microsoft.OpenApi.Models.OpenApiInfo
+                    {
+                        Title = "Meetings Api",
+                        Description = "Meetings Api for managing meetings",
+                        Version = "v1"
+                    });
+                var fileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var filePath = Path.Combine(AppContext.BaseDirectory, fileName);
+                options.IncludeXmlComments(filePath);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,6 +68,12 @@ namespace WebApplication1
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Meetings Api");
+                options.RoutePrefix = string.Empty;
             });
         }
     }
