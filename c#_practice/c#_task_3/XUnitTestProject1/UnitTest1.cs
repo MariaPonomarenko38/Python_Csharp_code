@@ -1,156 +1,183 @@
-using Microsoft.AspNetCore.Mvc.Testing;
 using System;
-using System.Net.Http;
-using Xunit;
-using WebApplication1.Models;
-using System.Threading.Tasks;
-using WebApplication1.Controllers;
-using WebApplication1.DataAccess;
-using Microsoft.AspNetCore.Mvc;
-using XUnitTestProject1;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Text;
+using WebApplication1.Models;
+using WebApplication1.DataAccess;
+using WebApplication1.Controllers;
+using Xunit;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using Moq;
 
 namespace XUnitTestProject1
 {
     public class UnitTest1
     {
-        MeetingsController _controller;
-        IDataAccessProvider _service;
-        public UnitTest1()
-        {
-            _service = new MeetingFake();
-            _controller = new MeetingsController(_service);
-        }
+        private OwnerParameters o = new OwnerParameters();
 
         [Fact]
-        public void Get_ReturnsOkResult()
+        public void Get()
         {
-            OwnerParameters o = new OwnerParameters();
-            var okResult = _controller.GetMeetings(o);
-            Assert.IsType<OkObjectResult>(okResult.Result);
+            var mock = new Mock<IDataAccessProvider>();
+            mock.Setup(repo => repo.GetRecords(o)).Returns(meets);
+            var controller = new MeetingsController(mock.Object);
+            var Result = controller.GetMeetings(o);
+
+            var OkResult = Assert.IsType<OkObjectResult>(Result.Result);
+            var resultObj = (List<Meeting>)OkResult.Value;
+            Assert.Equal(2, resultObj.ToList().Count());
         }
         [Fact]
-        public void GetById_ReturnsOkResult()
+        public void Get_id_Ok()
         {
-            var testGuid = "ab2bd817-98cd-4cf3-a80a-53ea0cd9c200";
-            var okResult = _controller.Details(testGuid);
-            Assert.IsType<OkObjectResult>(okResult.Result);
-        }
-        [Fact]
-        public void Get_ReturnsAllItems()
-        {
-            OwnerParameters o = new OwnerParameters();
-            var okResult = _controller.GetMeetings(o).Result as OkObjectResult;
-            var items = Assert.IsType<List<Meeting>>(okResult.Value);
-            Assert.Equal(2, items.Count());
-        }
-        [Fact]
-        public void Change_ReturnOk()
-        {
-            Meeting m = new Meeting
+            var mock = new Mock<IDataAccessProvider>();
+
+            string id = "ab2bd817-98cd-4cf3-a80a-53ea0cd9c200";
+            var meet = new Meeting()
             {
-                Id = new Guid("ab2bd817-98cd-4cf3-a80a-53ea0cd9c200").ToString(),
+                Id = "ab2bd817-98cd-4cf3-a80a-53ea0cd9c200",
                 Date = DateTime.Parse("2021-02-03"),
                 Start_time = "13:40",
-                End_time = "15:40",
+                End_time = "14:40",
                 Url = "https://blog.reedsoy.com/writing-apps/#11__hemingway",
-                Owner = "Mkfjgk Fgklfg",
-                Participant = "riuroi krjtlrt"
+                Owner = "Maria Ponomarenko",
+                Participant = "David Brown"
             };
-            var respo = _controller.Edit(m);
-            var t = _service.GetMeetingSingleRecord("ab2bd817-98cd-4cf3-a80a-53ea0cd9c200");
-            Assert.IsType<OkObjectResult>(respo);
-            Assert.Equal("15:40", t.End_time);
-        }
+            mock.Setup(repo => repo.GetMeetingSingleRecord(id)).Returns(meet);
+            var controller = new MeetingsController(mock.Object);
+            var Result = controller.Details(id);
 
-        [Fact]
-        public void Remove_ExistingGuidPassed_ReturnsOkResult()
-        {
-            var existingGuid = new Guid("ab2bd817-98cd-4cf3-a80a-53ea0cd9c200").ToString();
-            var okResponse = _controller.DeleteConfirmed(existingGuid);
-            Assert.IsType<OkObjectResult>(okResponse);
+            var OkResult = Assert.IsType<OkObjectResult>(Result.Result);
+            var resultObj = (Meeting)OkResult.Value;
+            Assert.Equal("13:40", resultObj.Start_time);
         }
         [Fact]
-        public void Remove_NotExistingGuidPassed_ReturnsNotFoundResponse()
+        public void Get_id_NotFound()
         {
-            var notExistingGuid = Guid.NewGuid().ToString();
-            var badResponse = _controller.DeleteConfirmed(notExistingGuid);
-            Assert.IsType<NotFoundObjectResult>(badResponse);
+            var mock = new Mock<IDataAccessProvider>();
+
+            string id = "ab2bd817-98cd-4cf3-a80a-53ea0cd9c200";
+
+            mock.Setup(repo => repo.GetMeetingSingleRecord(id)).Returns((Meeting)null);
+            var controller = new MeetingsController(mock.Object);
+            var Result = controller.Details(id);
+
+            var OkResult = Assert.IsType<NotFoundResult>(Result.Result);
         }
         [Fact]
-        public void Remove_ExistingGuidPassed_RemovesOneItem()
+        public void Delete_Ok()
         {
-            OwnerParameters o = new OwnerParameters();
-            var existingGuid = new Guid("ab2bd817-98cd-4cf3-a80a-53ea0cd9c200").ToString();
-            var okResponse = _controller.DeleteConfirmed(existingGuid);
-            Assert.Equal(1, _service.GetRecords(o).Count());
-        }
-        [Fact]
-        public void Get_Search()
-        {
-            OwnerParameters o = new OwnerParameters();
-            o.Search = "James";
-            var okResult = _controller.GetMeetings(o).Result as OkObjectResult;
-            var items = Assert.IsType<List<Meeting>>(okResult.Value);
-            Assert.Equal(1, items.Count());
-        }
-        [Fact]
-        public void Get_Sort()
-        {
-            OwnerParameters o = new OwnerParameters();
-            o.Sort_by = "Start_time";
-            var okResult = _controller.GetMeetings(o).Result as OkObjectResult;
-            var items = Assert.IsType<List<Meeting>>(okResult.Value);
-            for (int i = 0; i < items.Count(); i++)
+            const string DeletedId = "ab2bd817-98cd-4cf3-a80a-53ea0cd9c200";
+            var meet = new Meeting()
             {
-                Assert.True(EqualsMeet(SortedList()[i], items[i]));
-                break;
-            }
+                Id = "ab2bd817-98cd-4cf3-a80a-53ea0cd9c200",
+                Date = DateTime.Parse("2021-02-03"),
+                Start_time = "13:40",
+                End_time = "14:40",
+                Url = "https://blog.reedsoy.com/writing-apps/#11__hemingway",
+                Owner = "Maria Ponomarenko",
+                Participant = "David Brown"
+            };
+            var mock = new Mock<IDataAccessProvider>();
+            mock.Setup(repo => repo.GetMeetingSingleRecord(DeletedId)).Returns(meet);
+            mock.Setup(repo => repo.DeleteMeetingRecord(DeletedId)).Returns(DeletedId);
+            var controller = new MeetingsController(mock.Object);
+            var Result = controller.DeleteConfirmed(DeletedId);
+
+            var OkResult = Assert.IsType<OkObjectResult>(Result.Result);
+        }
+        [Fact]
+        public void Delete_NotFound()
+        {
+            const string DeletedId = "ab2bd817-98cd-4cf3-a80a-53ea0cd9c200";
+
+            var mock = new Mock<IDataAccessProvider>();
+
+            mock.Setup(repo => repo.GetMeetingSingleRecord(DeletedId)).Returns((Meeting)null);
+            mock.Setup(repo => repo.DeleteMeetingRecord(DeletedId)).Returns(DeletedId);
+            var controller = new MeetingsController(mock.Object);
+            var Result = controller.DeleteConfirmed(DeletedId);
+
+            var OkResult = Assert.IsType<NotFoundObjectResult>(Result.Result);
         }
         [Fact]
         public void Add_Valid()
         {
-            Meeting testItem = new Meeting()
+            var mock = new Mock<IDataAccessProvider>();
+            string id = new Guid().ToString();
+            Meeting m = new Meeting
             {
-                Date = DateTime.Parse("2021-06-09"),
-                Start_time = "12:40",
+                Id = id,
+                Date = DateTime.Parse("2021-02-03"),
+                Start_time = "13:40",
                 End_time = "19:40",
                 Url = "https://blog.reedsoy.com/writing-apps/#11__hemingway",
-                Owner = "Molly Cooper",
-                Participant = "James Lie"
+                Owner = "Maria Ponomarenko",
+                Participant = "David Brown"
             };
-            var createdResponse = _controller.Create(testItem);
-            Assert.IsType<OkObjectResult>(createdResponse);
+
+            var controller = new MeetingsController(mock.Object);
+            var Result = controller.Create(m);
+            mock.Verify(r => r.AddMeetingRecord(m));
+
         }
         [Fact]
-        public void Add_NotValid()
+        public void Edit_Ok()
         {
-            var testItem = new Meeting()
-            {
-                Date = DateTime.Parse("2021-06-09"),
-                End_time = "19:40",
-                Url = "https://blog.reedsoy.com/writing-apps/#11__hemingway",
-                Owner = "Molly Cooper",
-                Participant = "James Lie"
-            };
-            _controller.ModelState.AddModelError("Start_time", "Required");
-            var createdResponse = _controller.Create(testItem);
-            Assert.IsType<BadRequestObjectResult>(createdResponse);
-        }
-        private List<Meeting> SortedList()
-        {
-            var meets1 = new List<Meeting>
-            {
-                new Meeting {Id = "815accac-fd5b-478a-a9d6-f171a2f6ae7f",
-                Date = DateTime.Parse("2021-06-09"),
-                Start_time = "12:40",
-                End_time = "19:40",
-                Url = "https://blog.reedsoy.com/writing-apps/#11__hemingway",
-                Owner = "Molly Cooper",
-                Participant = "James Lie"},
+            var mock = new Mock<IDataAccessProvider>();
 
+            Meeting m = new Meeting
+            {
+                Id = "ab2bd817-98cd-4cf3-a80a-53ea0cd9c200",
+                Date = DateTime.Parse("2021-02-03"),
+                Start_time = "13:40",
+                End_time = "20:40",
+                Url = "https://blog.reedsoy.com/writing-apps/#11__hemingway",
+                Owner = "Maria Ponomarenko",
+                Participant = "David Brown"
+            };
+
+            var controller = new MeetingsController(mock.Object);
+
+            mock.Setup(r => r.MeetingExists("ab2bd817-98cd-4cf3-a80a-53ea0cd9c200")).Returns(true);
+            var Result = controller.Edit(m);
+            mock.Verify(svc => svc.UpdateMeetingRecord(It.IsAny<Meeting>()),
+                  Times.Once());
+            var OkResult = Assert.IsType<OkObjectResult>(Result.Result);
+            var resultObj = (Meeting)OkResult.Value;
+            Assert.Equal("20:40", resultObj.End_time);
+        }
+        [Fact]
+        public void Edit_NotFound()
+        {
+            var mock = new Mock<IDataAccessProvider>();
+
+            var controller = new MeetingsController(mock.Object);
+
+            mock.Setup(r => r.MeetingExists("ab2bd817-98cd-4cf3-a80a-53ea0cd9c200")).Returns(null);
+            Meeting m = new Meeting();
+            var Result = controller.Edit(m);
+
+            var OkResult = Assert.IsType<BadRequestObjectResult>(Result.Result);
+        }
+        [Fact]
+        public void Add_Invalid()
+        {
+            var mock = new Mock<IDataAccessProvider>();
+
+            Meeting m = new Meeting();
+
+            var controller = new MeetingsController(mock.Object);
+            controller.ModelState.AddModelError("Owner", "Required");
+            var Result = controller.Create(m);
+
+            var redirectToActionResult = Assert.IsType<BadRequestObjectResult>(Result);
+
+        }
+
+        List<Meeting> meets = new List<Meeting>()
+            {
                 new Meeting {Id = "ab2bd817-98cd-4cf3-a80a-53ea0cd9c200",
                 Date = DateTime.Parse("2021-02-03"),
                 Start_time = "13:40",
@@ -159,27 +186,13 @@ namespace XUnitTestProject1
                 Owner = "Maria Ponomarenko",
                 Participant = "David Brown"},
 
+                new Meeting {Id = "815accac-fd5b-478a-a9d6-f171a2f6ae7f",
+                Date = DateTime.Parse("2021-06-09"),
+                Start_time = "12:40",
+                End_time = "19:40",
+                Url = "https://blog.reedsoy.com/writing-apps/#11__hemingway",
+                Owner = "Molly Cooper",
+                Participant = "James Lie"},
             };
-            return meets1;
-        }
-        private bool EqualsMeet(Meeting meet, Meeting meet1)
-        {
-            var stringProperties = typeof(Meeting).GetProperties();
-            foreach (var a in stringProperties)
-            {
-                if (a.Name == "Date")
-                {
-                    if (a.GetValue(meet).ToString() != a.GetValue(meet1).ToString())
-                    {
-                        return false;
-                    }
-                }
-                else if (a.GetValue(meet) != a.GetValue(meet1))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
     }
 }

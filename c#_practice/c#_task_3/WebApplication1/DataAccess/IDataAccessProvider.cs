@@ -10,7 +10,7 @@ namespace WebApplication1.DataAccess
     {
         void AddMeetingRecord(Meeting meet);
         void UpdateMeetingRecord(Meeting meet);
-        void DeleteMeetingRecord(string id);
+        string DeleteMeetingRecord(string id);
         Meeting GetMeetingSingleRecord(string id);
         IEnumerable<Meeting> GetRecords(OwnerParameters ownerParameters);
         bool MeetingExists(string id);

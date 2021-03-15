@@ -31,16 +31,17 @@ namespace WebApplication1.DataAccess
             _context.SaveChanges();
         }
 
-        public void DeleteMeetingRecord(string id)
+        public string DeleteMeetingRecord(string id)
         {
             var entity = _context.meetings.FirstOrDefault(t => t.Id == id);
             _context.meetings.Remove(entity);
             _context.SaveChanges();
+            return id;
         }
 
         public Meeting GetMeetingSingleRecord(string id)
         {
-            return _context.meetings.Where(t => t.Id == id).FirstOrDefault(); ;
+            return _context.meetings.Where(t => t.Id == id).FirstOrDefault();
         }
 
         public IEnumerable<Meeting> GetRecords(OwnerParameters ownerParameters)

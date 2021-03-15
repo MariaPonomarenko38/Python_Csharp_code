@@ -76,16 +76,16 @@ namespace WebApplication1.Controllers
         /// <param name="meet"></param>
         /// <response code="400">If meeting with id doesn't exist or body is invalid</response>
         [HttpPut]
-        public IActionResult Edit([FromBody] Meeting meet)
+        public ActionResult<Meeting> Edit([FromBody] Meeting meet)
         {
             if (_dataAccessProvider.MeetingExists(meet.Id) == false)
             {
-                return BadRequest(JsonConvert.SerializeObject("Meeting with this id doesn't exist"));
+                return BadRequest("Meeting with this id doesn't exist");
             }
             if (ModelState.IsValid)
             {
                 _dataAccessProvider.UpdateMeetingRecord(meet);
-                return Ok(JsonConvert.SerializeObject("Meeting was updated"));
+                return Ok(meet);
             }
             return BadRequest(ModelState);
         }
@@ -95,15 +95,15 @@ namespace WebApplication1.Controllers
         /// <param name="id"></param>
         /// <response code="400">If meeting with id doesn't exist</response>
         [HttpDelete("{id}")]
-        public ActionResult DeleteConfirmed(string id)
+        public ActionResult<string> DeleteConfirmed(string id)
         {
             var data = _dataAccessProvider.GetMeetingSingleRecord(id);
             if (data == null)
             {
-                return NotFound(JsonConvert.SerializeObject("No meeting with such id"));
+                return NotFound("No meeting with such id");
             }
-            _dataAccessProvider.DeleteMeetingRecord(id);
-            return Ok(JsonConvert.SerializeObject("Meeting was deleted"));
+            var b = _dataAccessProvider.DeleteMeetingRecord(id);
+            return Ok(b);
         }
     }
 }
