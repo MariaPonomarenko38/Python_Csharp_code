@@ -50,7 +50,7 @@ namespace WebApplication1.Controllers
                 Guid obj = Guid.NewGuid();
                 meet.Id = obj.ToString();
                 _dataAccessProvider.AddMeetingRecord(meet);
-                return Ok(JsonConvert.SerializeObject("Meeting was successfully added"));
+                return Ok(new Responce { meeting = meet, message = "Meeting was successfully added" });
             }
             return BadRequest(ModelState);
         }
@@ -66,9 +66,9 @@ namespace WebApplication1.Controllers
             var item = _dataAccessProvider.GetMeetingSingleRecord(id);
             if (item == null)
             {
-                return NotFound();
+                return NotFound(new Responce { message = "Not found" });
             }
-            return Ok(item);
+            return Ok(new Responce { meeting = item, message = "Meeting was found" });
         }
         /// <summary>
         /// This PUT method changes meeting values 
@@ -85,7 +85,7 @@ namespace WebApplication1.Controllers
             if (ModelState.IsValid)
             {
                 _dataAccessProvider.UpdateMeetingRecord(meet);
-                return Ok(meet);
+                return Ok(new Responce { meeting = meet, message = "Meeting was updated" });
             }
             return BadRequest(ModelState);
         }
@@ -103,7 +103,7 @@ namespace WebApplication1.Controllers
                 return NotFound("No meeting with such id");
             }
             var b = _dataAccessProvider.DeleteMeetingRecord(id);
-            return Ok(b);
+            return Ok(new Responce { message = $"Meeting {b} was deleted" });
         }
     }
 }
