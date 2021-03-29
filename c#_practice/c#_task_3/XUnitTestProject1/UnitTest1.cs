@@ -68,6 +68,9 @@ namespace XUnitTestProject1
             var Result = controller.DeleteConfirmed(DeletedId);
 
             var OkResult = Assert.IsType<OkObjectResult>(Result.Result);
+            var resultObj = (Responce)OkResult.Value;
+            string[] s = resultObj.message.Split(' ');
+            Assert.Equal(DeletedId, s[1]);
         }
         [Fact]
         public void Delete_NotFound()
@@ -86,12 +89,22 @@ namespace XUnitTestProject1
         [Fact]
         public void Add_Valid()
         {
-            var mock = new Mock<IDataAccessProvider>();
-            string id = new Guid().ToString();
-           
-            var controller = new MeetingsController(mock.Object);
-            var Result1 = controller.Create(meet);
-            mock.Verify(r => r.AddMeetingRecord(meet));
+            // Arrange
+            var serviceMock = new Mock<IDataAccessProvider>();
+            const string Id = "ab2bd817-98cd-4cf3-a80a-53ea0cd9c200";
+            serviceMock.Setup(x => x.AddMeetingRecord(meet)).Returns(meet);
+            serviceMock.Setup(x => x.GetMeetingSingleRecord(Id)).Returns(meet);
+            var controller = new MeetingsController(serviceMock.Object);
+            
+            // Act
+            var Result = controller.Create(meet);
+
+            // Assert
+            var OkResult = Assert.IsType<OkObjectResult>(Result);
+            var resultObj = (Responce)OkResult.Value;
+            var actual = Assert.IsType<Meeting>(resultObj.meeting);
+
+            Assert.Equal(meet, actual);
         }
         [Fact]
         public void Edit_Ok()
@@ -132,7 +145,7 @@ namespace XUnitTestProject1
             controller.ModelState.AddModelError("Owner", "Required");
             var Result = controller.Create(m);
 
-            var redirectToActionResult = Assert.IsType<BadRequestObjectResult>(Result);
+            Assert.IsType<BadRequestObjectResult>(Result);
 
         }
 

@@ -49,8 +49,8 @@ namespace WebApplication1.Controllers
             {
                 Guid obj = Guid.NewGuid();
                 meet.Id = obj.ToString();
-                _dataAccessProvider.AddMeetingRecord(meet);
-                return Ok(new Responce { meeting = meet, message = "Meeting was successfully added" });
+                Meeting added_meet = _dataAccessProvider.AddMeetingRecord(meet);
+                return Ok(new Responce { meeting = added_meet, message = "Meeting was successfully added" });
             }
             return BadRequest(ModelState);
         }

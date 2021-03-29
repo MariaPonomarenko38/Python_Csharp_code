@@ -19,10 +19,11 @@ namespace WebApplication1.DataAccess
             _context = context;
         }
 
-        public void AddMeetingRecord(Meeting meet)
+        public Meeting AddMeetingRecord(Meeting meet)
         {
             _context.meetings.Add(meet);
             _context.SaveChanges();
+            return meet;
         }
 
         public void UpdateMeetingRecord(Meeting meeting)

@@ -8,7 +8,7 @@ namespace WebApplication1.DataAccess
 {
     public interface IDataAccessProvider
     {
-        void AddMeetingRecord(Meeting meet);
+        Meeting AddMeetingRecord(Meeting meet);
         void UpdateMeetingRecord(Meeting meet);
         string DeleteMeetingRecord(string id);
         Meeting GetMeetingSingleRecord(string id);
