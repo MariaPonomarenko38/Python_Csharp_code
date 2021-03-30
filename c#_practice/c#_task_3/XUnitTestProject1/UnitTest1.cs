@@ -25,7 +25,7 @@ namespace XUnitTestProject1
             var Result = controller.GetMeetings(o);
 
             var OkResult = Assert.IsType<OkObjectResult>(Result.Result);
-            var resultObj = (List<Meeting>)OkResult.Value;
+            var resultObj = (IQueryable<Meeting>)OkResult.Value;
             Assert.Equal(2, resultObj.ToList().Count());
         }
         [Fact]
@@ -159,7 +159,7 @@ namespace XUnitTestProject1
             var Result = controller.GetMeetings(o1);
 
             var OkResult = Assert.IsType<OkObjectResult>(Result.Result);
-            var resultObj = (List<Meeting>)OkResult.Value;
+            var resultObj = (IQueryable<Meeting>)OkResult.Value;
             Assert.Single(resultObj.ToList());
 
         }
@@ -174,7 +174,7 @@ namespace XUnitTestProject1
             var Result = controller.GetMeetings(o1);
 
             var OkResult = Assert.IsType<OkObjectResult>(Result.Result);
-            var resultObj = (List<Meeting>)OkResult.Value;
+            var resultObj = (IQueryable<Meeting>)OkResult.Value;
             Assert.Equal("12:40", resultObj.ToList()[0].Start_time);
 
         }

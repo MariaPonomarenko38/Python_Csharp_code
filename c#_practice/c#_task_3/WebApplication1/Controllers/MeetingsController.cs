@@ -34,7 +34,7 @@ namespace WebApplication1.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Meeting>> GetMeetings([FromQuery] OwnerParameters ownerParameters)
         {
-            var values = _dataAccessProvider.GetRecords(ownerParameters);
+            IQueryable values = _dataAccessProvider.GetRecords(ownerParameters).AsQueryable();
             return Ok(values);
         }
         /// <summary>
