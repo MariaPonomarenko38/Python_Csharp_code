@@ -8,12 +8,11 @@ namespace WebApplication1.DataAccess
 {
     public interface IDataAccessProvider
     {
-        void AddMeetingRecord(Meeting meet);
+        Meeting AddMeetingRecord(Meeting meet);
         void UpdateMeetingRecord(Meeting meet);
-        void DeleteMeetingRecord(string id);
+        string DeleteMeetingRecord(string id);
         Meeting GetMeetingSingleRecord(string id);
-        List<Meeting> GetMeetingRecords();
-        IQueryable<Meeting> GetRecords(OwnerParameters ownerParameters);
+        IEnumerable<Meeting> GetRecords(OwnerParameters ownerParameters);
         bool MeetingExists(string id);
     }
 }
