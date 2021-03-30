@@ -148,6 +148,36 @@ namespace XUnitTestProject1
             Assert.IsType<BadRequestObjectResult>(Result);
 
         }
+        [Fact]
+        public void Search_Ok()
+        {
+            OwnerParameters o1 = new OwnerParameters();
+            o1.Search = "Molly";
+            var mock = new Mock<IDataAccessProvider>();
+            mock.Setup(repo => repo.GetRecords(o1)).Returns(meets1);
+            var controller = new MeetingsController(mock.Object);
+            var Result = controller.GetMeetings(o1);
+
+            var OkResult = Assert.IsType<OkObjectResult>(Result.Result);
+            var resultObj = (List<Meeting>)OkResult.Value;
+            Assert.Single(resultObj.ToList());
+
+        }
+        [Fact]
+        public void Sort_Ok()
+        {
+            OwnerParameters o1 = new OwnerParameters();
+            o1.Sort_by = "Start_time";
+            var mock = new Mock<IDataAccessProvider>();
+            mock.Setup(repo => repo.GetRecords(o1)).Returns(meets_sorted);
+            var controller = new MeetingsController(mock.Object);
+            var Result = controller.GetMeetings(o1);
+
+            var OkResult = Assert.IsType<OkObjectResult>(Result.Result);
+            var resultObj = (List<Meeting>)OkResult.Value;
+            Assert.Equal("12:40", resultObj.ToList()[0].Start_time);
+
+        }
 
         List<Meeting> meets = new List<Meeting>()
         {
@@ -166,6 +196,34 @@ namespace XUnitTestProject1
             Url = "https://blog.reedsoy.com/writing-apps/#11__hemingway",
             Owner = "Molly Cooper",
             Participant = "James Lie"},
+        };
+        List<Meeting> meets1 = new List<Meeting>()
+        {
+            new Meeting {Id = "815accac-fd5b-478a-a9d6-f171a2f6ae7f",
+            Date = DateTime.Parse("2021-06-09"),
+            Start_time = "12:40",
+            End_time = "19:40",
+            Url = "https://blog.reedsoy.com/writing-apps/#11__hemingway",
+            Owner = "Molly Cooper",
+            Participant = "James Lie"},
+        };
+        List<Meeting> meets_sorted = new List<Meeting>()
+        {
+            new Meeting {Id = "815accac-fd5b-478a-a9d6-f171a2f6ae7f",
+            Date = DateTime.Parse("2021-06-09"),
+            Start_time = "12:40",
+            End_time = "19:40",
+            Url = "https://blog.reedsoy.com/writing-apps/#11__hemingway",
+            Owner = "Molly Cooper",
+            Participant = "James Lie"},
+
+            new Meeting {Id = "ab2bd817-98cd-4cf3-a80a-53ea0cd9c200",
+            Date = DateTime.Parse("2021-02-03"),
+            Start_time = "13:40",
+            End_time = "14:40",
+            Url = "https://blog.reedsoy.com/writing-apps/#11__hemingway",
+            Owner = "Maria Ponomarenko",
+            Participant = "David Brown"}        
         };
         Meeting meet = new Meeting()
         {

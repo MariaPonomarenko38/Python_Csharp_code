@@ -11,10 +11,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LightQuery.Client;
 using WebApplication1.Models;
 using WebApplication1.DataAccess;
 using System.Reflection;
 using System.IO;
+using LightQuery.Swashbuckle;
 
 namespace WebApplication1
 {
@@ -48,6 +50,14 @@ namespace WebApplication1
                 var fileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var filePath = Path.Combine(AppContext.BaseDirectory, fileName);
                 options.IncludeXmlComments(filePath);
+            });
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("swagger20", new Microsoft.OpenApi.Models.OpenApiInfo()
+                {
+                    Description = "swagger20"
+                });
+                options.OperationFilter<LightQueryOperationFilter>();
             });
         }
 
