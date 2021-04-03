@@ -14,7 +14,9 @@ namespace MeetingOrder.Authentication
         {
 
         }
+        public DbSet<ApplicationUser> users { get; set; }
         public DbSet<Meeting> meetings { get; set; }
+        public DbSet<Order> orders { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

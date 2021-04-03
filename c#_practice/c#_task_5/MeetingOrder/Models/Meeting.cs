@@ -22,7 +22,7 @@ namespace MeetingOrder.Models
     }
     public class Meeting : IValidatableObject
     {
-        public string Id { get; set; }
+        public string MeetingId { get; set; }
         [Required]
         public string Start_time { get; set; }
         [Required]
@@ -40,6 +40,9 @@ namespace MeetingOrder.Models
         [RegularExpression(@"^[(a-zA-Z)' '(a-zA-Z)]*$",
             ErrorMessage = "Characters are not allowed.")]
         public string Participant { get; set; }
+        [Required]
+        public int Count { get; set; }
+        public Order Order { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

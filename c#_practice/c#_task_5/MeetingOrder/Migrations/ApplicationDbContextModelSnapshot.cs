@@ -85,8 +85,11 @@ namespace MeetingOrder.Migrations
 
             modelBuilder.Entity("MeetingOrder.Models.Meeting", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<string>("MeetingId")
                         .HasColumnType("text");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp without time zone");
@@ -111,9 +114,30 @@ namespace MeetingOrder.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("MeetingId");
 
                     b.ToTable("meetings");
+                });
+
+            modelBuilder.Entity("MeetingOrder.Models.Order", b =>
+                {
+                    b.Property<string>("OrderId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("MeetingId")
+                        .HasColumnType("text");
+
+                    b.HasKey("OrderId");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("MeetingId")
+                        .IsUnique();
+
+                    b.ToTable("orders");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -244,6 +268,17 @@ namespace MeetingOrder.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("MeetingOrder.Models.Order", b =>
+                {
+                    b.HasOne("MeetingOrder.Authentication.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("MeetingOrder.Models.Meeting", "Meeting")
+                        .WithOne("Order")
+                        .HasForeignKey("MeetingOrder.Models.Order", "MeetingId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

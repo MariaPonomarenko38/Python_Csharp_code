@@ -51,17 +51,18 @@ namespace MeetingOrder.Migrations
                 name: "meetings",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
+                    MeetingId = table.Column<string>(nullable: false),
                     Start_time = table.Column<string>(nullable: false),
                     End_time = table.Column<string>(nullable: false),
                     Date = table.Column<DateTime>(nullable: false),
                     Url = table.Column<string>(nullable: false),
                     Owner = table.Column<string>(nullable: false),
-                    Participant = table.Column<string>(nullable: false)
+                    Participant = table.Column<string>(nullable: false),
+                    Count = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_meetings", x => x.Id);
+                    table.PrimaryKey("PK_meetings", x => x.MeetingId);
                 });
 
             migrationBuilder.CreateTable(
@@ -170,6 +171,31 @@ namespace MeetingOrder.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "orders",
+                columns: table => new
+                {
+                    OrderId = table.Column<string>(nullable: false),
+                    ApplicationUserId = table.Column<string>(nullable: true),
+                    MeetingId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_orders", x => x.OrderId);
+                    table.ForeignKey(
+                        name: "FK_orders_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_orders_meetings_MeetingId",
+                        column: x => x.MeetingId,
+                        principalTable: "meetings",
+                        principalColumn: "MeetingId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -206,6 +232,17 @@ namespace MeetingOrder.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_orders_ApplicationUserId",
+                table: "orders",
+                column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_orders_MeetingId",
+                table: "orders",
+                column: "MeetingId",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -226,13 +263,16 @@ namespace MeetingOrder.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "meetings");
+                name: "orders");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "meetings");
         }
     }
 }

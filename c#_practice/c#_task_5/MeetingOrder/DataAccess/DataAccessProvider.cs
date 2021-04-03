@@ -34,14 +34,14 @@ namespace MeetingOrder.DataAccess
 
         public void DeleteMeetingRecord(string id)
         {
-            var entity = _context.meetings.FirstOrDefault(t => t.Id == id);
+            var entity = _context.meetings.FirstOrDefault(t => t.MeetingId == id);
             _context.meetings.Remove(entity);
             _context.SaveChanges();
         }
 
         public Meeting GetMeetingSingleRecord(string id)
         {
-            return _context.meetings.FirstOrDefault(t => t.Id == id);
+            return _context.meetings.FirstOrDefault(t => t.MeetingId == id);
         }
 
         public List<Meeting> GetMeetingRecords()
@@ -81,7 +81,7 @@ namespace MeetingOrder.DataAccess
         }
         public bool MeetingExists(string id)
         {
-            return _context.meetings.Any(e => e.Id == id);
+            return _context.meetings.Any(e => e.MeetingId == id);
         }
     }
 }

@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 
 namespace MeetingOrder.Controllers
 {
-    [Authorize(Roles = UserRoles.Admin)]
     [ApiController]
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
