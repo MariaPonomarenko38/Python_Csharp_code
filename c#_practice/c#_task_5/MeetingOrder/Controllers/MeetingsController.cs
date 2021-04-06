@@ -69,7 +69,7 @@ namespace MeetingOrder.Controllers
         {
             if (_dataAccessProvider.MeetingExists(id) == false)
             {
-                return NotFound("Meeting doesn't exist");
+                return NotFound(new MeetingResponce {message = "Meeting doesn't exist" });
             }
             return _dataAccessProvider.GetMeetingSingleRecord(id);
         }
@@ -85,7 +85,7 @@ namespace MeetingOrder.Controllers
         {
             if (_dataAccessProvider.MeetingExists(meet.MeetingId) == false)
             {
-                return BadRequest("Meeting with this id doesn't exist");
+                return BadRequest(new MeetingResponce { message = "Meeting with this id doesn't exist" });
             }
             if (ModelState.IsValid)
             {
@@ -107,7 +107,7 @@ namespace MeetingOrder.Controllers
             var data = _dataAccessProvider.GetMeetingSingleRecord(id);
             if (data == null)
             {
-                return NotFound("No meeting with such id");
+                return NotFound(new MeetingResponce { message = "No meeting with such id" });
             }
             _dataAccessProvider.DeleteMeetingRecord(id);
             return Ok(new MeetingResponce { message = "Deleted" });

@@ -48,7 +48,7 @@ namespace MeetingOrder.Controllers
             IQueryable<Order> query = _context.orders;
             var list = (from r in query select r).AsEnumerable();
             IdentityUser user = userManager.FindByNameAsync(HttpContext.User.Identity.Name).Result;
-            list = list.Where(c => c.ApplicationUser.Id== user.Id);
+            list = list.Where(c => c.ApplicationUserId == user.Id);
             return Ok(list);
         }
         /// <summary>
@@ -75,7 +75,7 @@ namespace MeetingOrder.Controllers
             }
             else
             {
-                return BadRequest("Not found");
+                return BadRequest(new Responce { Message = "Not found" });
             }
         }
         /// <summary>
@@ -96,17 +96,17 @@ namespace MeetingOrder.Controllers
                 list = list.Where(c => c.ApplicationUserId == user.Id && c.MeetingId == model.MeetingId);
                 if (list.Count() > 0)
                 {
-                    return BadRequest("You have already subscribed on it");
+                    return BadRequest(new Responce { Message="You have already subscribed on it" });
                 }
                 Order o = new Order();
                 if (_dataAccessProvider.MeetingExists(model.MeetingId) == false)
                 {
-                    return BadRequest("No such meeting");
+                    return BadRequest(new Responce { Message = "No such meeting" });
                 }
                 Meeting meet = _context.meetings.FirstOrDefault(t => t.MeetingId == model.MeetingId);
                 if (meet.Count == 0)
                 {
-                    return BadRequest("No available places");
+                    return BadRequest(new Responce { Message = "No available places" });
                 }
                 meet.Count -= 1;
                 o.Meeting = meet;
@@ -117,7 +117,7 @@ namespace MeetingOrder.Controllers
                 _context.SaveChanges();
                 return Ok(o);
             }
-            return BadRequest();
+            return BadRequest(new Responce { Message = "Order form is not valid" });
         }
     }
 }
