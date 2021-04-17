@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -23,14 +25,18 @@ namespace MeetingOrder.Authentication
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly IConfiguration _configuration;
+        private readonly ApplicationDbContext _context;
+        private readonly IDistributedCache distributedCache;
         /// <summary>
         /// Authentication Controller
         /// </summary>
-        public AuthenticateController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+        public AuthenticateController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, ApplicationDbContext context, IDistributedCache distributedCache)
         {
             this.userManager = userManager;
             this.roleManager = roleManager;
+            this._context = context;
             _configuration = configuration;
+            this.distributedCache = distributedCache;
         }
         /// <summary>
         /// This POST method is responsible for login
@@ -65,12 +71,14 @@ namespace MeetingOrder.Authentication
                     claims: authClaims,
                     signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                     );
-
-                return Ok(new
-                {
-                    token = new JwtSecurityTokenHandler().WriteToken(token),
-                    expiration = token.ValidTo
-                });
+                TokenLogin t_log = new TokenLogin();
+                t_log.Id = Guid.NewGuid().ToString();
+                t_log.UserEmail = model.Email;
+                t_log.Token = new JwtSecurityTokenHandler().WriteToken(token);
+                t_log.TokenExpDate = token.ValidTo.ToString();
+                _context.token_login.Add(t_log);
+                _context.SaveChanges();
+                return Ok(t_log);
             }
             return Unauthorized();
         }
@@ -100,17 +108,9 @@ namespace MeetingOrder.Authentication
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new Responce { Status = result.ToString(), Message = "User creation failed! Please check user details and try again." });
             }
-            //if (model.Role == "Admin")
-            //{
-            //    if (!await roleManager.RoleExistsAsync(UserRoles.Admin))
-            //        await roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
-            //    if (!await roleManager.RoleExistsAsync(UserRoles.User))
-            //        await roleManager.CreateAsync(new IdentityRole(UserRoles.User));
-            //    if (await roleManager.RoleExistsAsync(UserRoles.Admin))
-            //    {
-            //        await userManager.AddToRoleAsync(user, UserRoles.Admin);
-            //    }
-            //}
+            var users = _context.users;
+            var users_string = JsonConvert.SerializeObject(users);
+            distributedCache.SetString("users", users_string);
             return Ok(new Responce { Status = "Success", Message = "User created successfully!" });
         }
     }
