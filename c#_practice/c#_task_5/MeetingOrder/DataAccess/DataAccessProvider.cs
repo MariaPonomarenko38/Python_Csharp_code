@@ -83,5 +83,18 @@ namespace MeetingOrder.DataAccess
         {
             return _context.meetings.Any(e => e.MeetingId == id);
         }
+
+        public bool InOrder(string id)
+        {
+            IQueryable<Order> query = _context.orders;
+            foreach(var o in query)
+            {
+                if(o.MeetingId == id)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

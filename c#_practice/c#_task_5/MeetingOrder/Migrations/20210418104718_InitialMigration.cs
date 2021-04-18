@@ -66,6 +66,20 @@ namespace MeetingOrder.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "token_login",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    UserEmail = table.Column<string>(nullable: true),
+                    Token = table.Column<string>(nullable: true),
+                    TokenExpDate = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_token_login", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -241,8 +255,7 @@ namespace MeetingOrder.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_orders_MeetingId",
                 table: "orders",
-                column: "MeetingId",
-                unique: true);
+                column: "MeetingId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -264,6 +277,9 @@ namespace MeetingOrder.Migrations
 
             migrationBuilder.DropTable(
                 name: "orders");
+
+            migrationBuilder.DropTable(
+                name: "token_login");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

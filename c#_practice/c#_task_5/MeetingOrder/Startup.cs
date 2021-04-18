@@ -126,6 +126,7 @@ namespace MeetingOrder
                 options.Configuration = "localhost:6379";
                 options.InstanceName = "redis1";
             });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

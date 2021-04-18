@@ -153,8 +153,7 @@ namespace MeetingOrder.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.HasIndex("MeetingId")
-                        .IsUnique();
+                    b.HasIndex("MeetingId");
 
                     b.ToTable("orders");
                 });
@@ -296,8 +295,8 @@ namespace MeetingOrder.Migrations
                         .HasForeignKey("ApplicationUserId");
 
                     b.HasOne("MeetingOrder.Models.Meeting", "Meeting")
-                        .WithOne("Order")
-                        .HasForeignKey("MeetingOrder.Models.Order", "MeetingId");
+                        .WithMany("Orders")
+                        .HasForeignKey("MeetingId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

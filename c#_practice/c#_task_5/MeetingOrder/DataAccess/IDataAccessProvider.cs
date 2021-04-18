@@ -15,5 +15,6 @@ namespace MeetingOrder.DataAccess
         List<Meeting> GetMeetingRecords();
         IQueryable<Meeting> GetRecords(OwnerParameters ownerParameters);
         bool MeetingExists(string id);
+        bool InOrder(string id);
     }
 }

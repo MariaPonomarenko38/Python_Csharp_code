@@ -122,7 +122,7 @@ namespace MeetingOrder.Controllers
                 _context.orders.Add(o);
                 _context.SaveChanges();
                 IQueryable<Order> query1 = _context.orders;
-                var orders_string = JsonConvert.SerializeObject(query1);
+                var orders_string = JsonConvert.SerializeObject(query1.ToList());
                 distributedCache.SetString("orders", orders_string);
                 return Ok(o);
             }

@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MeetingOrder.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210417103306_AddTokenLoginMigration")]
-    partial class AddTokenLoginMigration
+    [Migration("20210418104718_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -155,8 +155,7 @@ namespace MeetingOrder.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.HasIndex("MeetingId")
-                        .IsUnique();
+                    b.HasIndex("MeetingId");
 
                     b.ToTable("orders");
                 });
@@ -298,8 +297,8 @@ namespace MeetingOrder.Migrations
                         .HasForeignKey("ApplicationUserId");
 
                     b.HasOne("MeetingOrder.Models.Meeting", "Meeting")
-                        .WithOne("Order")
-                        .HasForeignKey("MeetingOrder.Models.Order", "MeetingId");
+                        .WithMany("Orders")
+                        .HasForeignKey("MeetingId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

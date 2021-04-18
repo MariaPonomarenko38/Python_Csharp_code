@@ -39,23 +39,10 @@ namespace MeetingOrder.Controllers
         [HttpGet]
         public IActionResult GetMeetings([FromQuery] OwnerParameters ownerParameters)
         {
-            //IQueryable values = _dataAccessProvider.GetRecords(ownerParameters).AsQueryable();
             var meetings = new List<Meeting>();
-            if(string.IsNullOrEmpty(distributedCache.GetString("meetings")))
-            {
-                meetings = _dataAccessProvider.GetRecords(ownerParameters).ToList();
-                var meetings_string = JsonConvert.SerializeObject(meetings);
-                distributedCache.SetString("meetings", meetings_string);
-            }
-            else
-            {
-                meetings = _dataAccessProvider.GetRecords(ownerParameters).ToList();
-                var meetings_string = JsonConvert.SerializeObject(meetings);
-                distributedCache.SetString("meetings", meetings_string);
-                var meetingFromCache = distributedCache.GetString("meetings");
-                meetings = JsonConvert.DeserializeObject<List<Meeting>>(meetingFromCache);
-            }
-            //return Ok(values);
+            meetings = _dataAccessProvider.GetRecords(ownerParameters).ToList();
+            var meetings_string = JsonConvert.SerializeObject(meetings);
+            distributedCache.SetString("meetings", meetings_string);
             return Ok(meetings.AsQueryable());
         }
         //[Authorize(Roles = UserRoles.Admin)]
@@ -134,6 +121,10 @@ namespace MeetingOrder.Controllers
             if (data == null)
             {
                 return NotFound(new MeetingResponce { message = "No meeting with such id" });
+            }
+            if(_dataAccessProvider.InOrder(id))
+            {
+                return BadRequest(new MeetingResponce { message = "Some users have subscribed on this meeting" });
             }
             _dataAccessProvider.DeleteMeetingRecord(id);
             var meetings = _dataAccessProvider.GetRecords(new OwnerParameters()).ToList();
