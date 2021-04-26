@@ -122,14 +122,18 @@ namespace MeetingOrder.Controllers
             {
                 return NotFound(new MeetingResponce { message = "No meeting with such id" });
             }
-            if(_dataAccessProvider.InOrder(id))
-            {
-                return BadRequest(new MeetingResponce { message = "Some users have subscribed on this meeting" });
-            }
+            //if(_dataAccessProvider.InOrder(id))
+            //{
+
+            //    return BadRequest(new MeetingResponce { message = "Some users have subscribed on this meeting" });
+            //}
             _dataAccessProvider.DeleteMeetingRecord(id);
             var meetings = _dataAccessProvider.GetRecords(new OwnerParameters()).ToList();
+            var orders = _dataAccessProvider.GetOrderRecords();
             var meetings_string = JsonConvert.SerializeObject(meetings);
+            var orders_string = JsonConvert.SerializeObject(orders);
             distributedCache.SetString("meetings", meetings_string);
+            distributedCache.SetString("orders", orders_string);
             return Ok(new MeetingResponce { message = "Deleted" });
         }
     }

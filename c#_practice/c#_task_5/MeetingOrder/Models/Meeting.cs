@@ -45,7 +45,7 @@ namespace MeetingOrder.Models
         public int Count { get; set; }
         [JsonIgnore] 
         [IgnoreDataMember] 
-        public List<Order> Orders { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

@@ -13,6 +13,7 @@ namespace MeetingOrder.DataAccess
         void DeleteMeetingRecord(string id);
         Meeting GetMeetingSingleRecord(string id);
         List<Meeting> GetMeetingRecords();
+        List<Order> GetOrderRecords();
         IQueryable<Meeting> GetRecords(OwnerParameters ownerParameters);
         bool MeetingExists(string id);
         bool InOrder(string id);

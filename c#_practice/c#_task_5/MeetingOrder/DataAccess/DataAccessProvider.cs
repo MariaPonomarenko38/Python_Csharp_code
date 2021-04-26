@@ -34,6 +34,9 @@ namespace MeetingOrder.DataAccess
 
         public void DeleteMeetingRecord(string id)
         {
+            var a = _context.orders.Where(c => c.MeetingId == id);
+            _context.orders.RemoveRange(a);
+            _context.SaveChanges();
             var entity = _context.meetings.FirstOrDefault(t => t.MeetingId == id);
             _context.meetings.Remove(entity);
             _context.SaveChanges();
@@ -47,6 +50,10 @@ namespace MeetingOrder.DataAccess
         public List<Meeting> GetMeetingRecords()
         {
             return _context.meetings.ToList();
+        }
+        public List<Order> GetOrderRecords()
+        {
+            return _context.orders.ToList();
         }
         public IQueryable<Meeting> GetRecords(OwnerParameters ownerParameters)
         {

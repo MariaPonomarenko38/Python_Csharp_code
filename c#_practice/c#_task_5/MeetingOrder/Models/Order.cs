@@ -19,6 +19,7 @@ namespace MeetingOrder.Models
         public string MeetingId { get; set; }
         [JsonIgnore]
         [IgnoreDataMember]
-        public Meeting Meeting { get; set; }
+        //public Meeting Meeting { get; set; }
+        public virtual Meeting Meeting { get; set; }
     }
 }
