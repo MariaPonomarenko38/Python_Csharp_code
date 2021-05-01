@@ -10,6 +10,8 @@ using MeetingOrder.Authentication;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Principal;
 using System.Security.Claims;
+using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -25,15 +27,17 @@ namespace MeetingOrder.Controllers
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IDataAccessProvider _dataAccessProvider;
         private readonly ApplicationDbContext _context;
+        private readonly IDistributedCache distributedCache;
         //private readonly Help _helper;
         /// <summary>
         /// OrderController
         /// </summary>
-        public OrderController(UserManager<ApplicationUser> userManager, IDataAccessProvider dataAccessProvider, ApplicationDbContext context)//, Help h)
+        public OrderController(UserManager<ApplicationUser> userManager, IDataAccessProvider dataAccessProvider, ApplicationDbContext context, IDistributedCache distributedCache)
         {
             this.userManager = userManager;
             this._context = context;
             this._dataAccessProvider = dataAccessProvider;
+            this.distributedCache = distributedCache;
            // this._helper = h;
         }
         // GET: api/<OrderController>
@@ -49,6 +53,8 @@ namespace MeetingOrder.Controllers
             var list = (from r in query select r).AsEnumerable();
             IdentityUser user = userManager.FindByNameAsync(HttpContext.User.Identity.Name).Result;
             list = list.Where(c => c.ApplicationUserId == user.Id);
+            var orders_string = JsonConvert.SerializeObject(query);
+            distributedCache.SetString("orders", orders_string);
             return Ok(list);
         }
         /// <summary>
@@ -115,6 +121,9 @@ namespace MeetingOrder.Controllers
                 o.ApplicationUser = (ApplicationUser)user;
                 _context.orders.Add(o);
                 _context.SaveChanges();
+                IQueryable<Order> query1 = _context.orders;
+                var orders_string = JsonConvert.SerializeObject(query1.ToList());
+                distributedCache.SetString("orders", orders_string);
                 return Ok(o);
             }
             return BadRequest(new Responce { Message = "Order form is not valid" });

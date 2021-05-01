@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MeetingOrder.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210403193922_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20210426171718_NewMigration1")]
+    partial class NewMigration1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -85,6 +85,25 @@ namespace MeetingOrder.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("MeetingOrder.Authentication.TokenLogin", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Token")
+                        .HasColumnType("text");
+
+                    b.Property<string>("TokenExpDate")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserEmail")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("token_login");
+                });
+
             modelBuilder.Entity("MeetingOrder.Models.Meeting", b =>
                 {
                     b.Property<string>("MeetingId")
@@ -136,8 +155,7 @@ namespace MeetingOrder.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.HasIndex("MeetingId")
-                        .IsUnique();
+                    b.HasIndex("MeetingId");
 
                     b.ToTable("orders");
                 });
@@ -279,8 +297,8 @@ namespace MeetingOrder.Migrations
                         .HasForeignKey("ApplicationUserId");
 
                     b.HasOne("MeetingOrder.Models.Meeting", "Meeting")
-                        .WithOne("Order")
-                        .HasForeignKey("MeetingOrder.Models.Order", "MeetingId");
+                        .WithMany("Orders")
+                        .HasForeignKey("MeetingId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

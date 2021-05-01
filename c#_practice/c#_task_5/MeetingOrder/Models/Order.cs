@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using MeetingOrder.Authentication;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+using System.Runtime.Serialization;
 
 namespace MeetingOrder.Models
 {
@@ -11,8 +13,13 @@ namespace MeetingOrder.Models
     {
         public string OrderId { get; set; }
         public string ApplicationUserId { get; set; }
+        [JsonIgnore]
+        [IgnoreDataMember]
         public virtual ApplicationUser ApplicationUser { get; set; }
         public string MeetingId { get; set; }
-        public Meeting Meeting { get; set; }
+        [JsonIgnore]
+        [IgnoreDataMember]
+        //public Meeting Meeting { get; set; }
+        public virtual Meeting Meeting { get; set; }
     }
 }

@@ -7,6 +7,8 @@ using MeetingOrder.Authentication;
 using LightQuery;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq;
+using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
 
 namespace MeetingOrder.Controllers
 {
@@ -17,12 +19,14 @@ namespace MeetingOrder.Controllers
     public class MeetingsController : ControllerBase
     {
         private readonly IDataAccessProvider _dataAccessProvider;
+        private readonly IDistributedCache distributedCache;
         /// <summary>
         /// Meetings Controller
         /// </summary>
-        public MeetingsController(IDataAccessProvider dataAccessProvider)
+        public MeetingsController(IDataAccessProvider dataAccessProvider, IDistributedCache distributedCache)
         {
             _dataAccessProvider = dataAccessProvider;
+            this.distributedCache = distributedCache;
         }
         /// <summary>
         /// This GET method returns meetings filtered by ownerParameters
@@ -35,8 +39,11 @@ namespace MeetingOrder.Controllers
         [HttpGet]
         public IActionResult GetMeetings([FromQuery] OwnerParameters ownerParameters)
         {
-            IQueryable values = _dataAccessProvider.GetRecords(ownerParameters).AsQueryable();
-            return Ok(values);
+            var meetings = new List<Meeting>();
+            meetings = _dataAccessProvider.GetRecords(ownerParameters).ToList();
+            var meetings_string = JsonConvert.SerializeObject(meetings);
+            distributedCache.SetString("meetings", meetings_string);
+            return Ok(meetings.AsQueryable());
         }
         //[Authorize(Roles = UserRoles.Admin)]
         /// <summary>
@@ -53,6 +60,9 @@ namespace MeetingOrder.Controllers
                 Guid obj = Guid.NewGuid();
                 meet.MeetingId = obj.ToString();
                 _dataAccessProvider.AddMeetingRecord(meet);
+                var meetings = _dataAccessProvider.GetRecords(new OwnerParameters()).ToList();
+                var meetings_string = JsonConvert.SerializeObject(meetings);
+                distributedCache.SetString("meetings", meetings_string);
                 return Ok(new MeetingResponce { obj = meet, message = "Created" });
             }
             return BadRequest(ModelState);
@@ -90,6 +100,9 @@ namespace MeetingOrder.Controllers
             if (ModelState.IsValid)
             {
                 _dataAccessProvider.UpdateMeetingRecord(meet);
+                var meetings = _dataAccessProvider.GetRecords(new OwnerParameters()).ToList();
+                var meetings_string = JsonConvert.SerializeObject(meetings);
+                distributedCache.SetString("meetings", meetings_string);
                 return Ok(new MeetingResponce { obj = meet, message = "Created" });
             }
             return BadRequest(ModelState);
@@ -109,7 +122,18 @@ namespace MeetingOrder.Controllers
             {
                 return NotFound(new MeetingResponce { message = "No meeting with such id" });
             }
+            //if(_dataAccessProvider.InOrder(id))
+            //{
+
+            //    return BadRequest(new MeetingResponce { message = "Some users have subscribed on this meeting" });
+            //}
             _dataAccessProvider.DeleteMeetingRecord(id);
+            var meetings = _dataAccessProvider.GetRecords(new OwnerParameters()).ToList();
+            var orders = _dataAccessProvider.GetOrderRecords();
+            var meetings_string = JsonConvert.SerializeObject(meetings);
+            var orders_string = JsonConvert.SerializeObject(orders);
+            distributedCache.SetString("meetings", meetings_string);
+            distributedCache.SetString("orders", orders_string);
             return Ok(new MeetingResponce { message = "Deleted" });
         }
     }

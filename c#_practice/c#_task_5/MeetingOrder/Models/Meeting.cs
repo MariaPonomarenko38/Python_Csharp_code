@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using Newtonsoft.Json.Converters;
+using System.Runtime.Serialization;
 
 namespace MeetingOrder.Models
 {
@@ -42,7 +43,9 @@ namespace MeetingOrder.Models
         public string Participant { get; set; }
         [Required]
         public int Count { get; set; }
-        public Order Order { get; set; }
+        [JsonIgnore] 
+        [IgnoreDataMember] 
+        public virtual ICollection<Order> Orders { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
