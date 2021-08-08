@@ -35,7 +35,7 @@ namespace MeetingOrder.Models
         public string Url { get; set; }
         [Required]
         [RegularExpression(@"^[(a-zA-Z)' '(a-zA-Z)]*$",
-            ErrorMessage = "Characters are   not allowed.")]
+            ErrorMessage = "Characters are     not allowed.")]
         public string Owner { get; set; }
         [Required]
         [RegularExpression(@"^[(a-zA-Z)' '(a-zA-Z)]*$",
